@@ -1,0 +1,24 @@
+.menuItem {
+  display: flex !important;
+  align-items: center;
+  width: 100%;
+  padding: 16px !important;
+  font-weight: 500 !important;
+  background-color: var(--mantine-color-white);
+  color: var(--mantine-color-dark) !important;
+  & svg {
+    color: var(--mantine-color-primary-5);
+    margin-right: 16px;
+    font-size: 21px;
+  }
+  &[data-active],
+  &:hover {
+    text-decoration: none;
+    border-right: solid 3px var(--mantine-color-primary-5);
+    background-color: 'red';
+    color: var(--mantine-color-primary-5) !important;
+  }
+  &[data-active] {
+    background-color: #547a9a2c;
+  }
+}
