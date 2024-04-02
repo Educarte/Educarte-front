@@ -48,6 +48,13 @@ const InputMask: React.FC<Props> = (props) => {
       .replace(/(-\d{3})\d+?$/, '$1');
   };
 
+  const maskHour = (value: string) => {
+    return value
+      .replace(/\D/g, '')
+      .replace(/(\d{2})(\d)/, '$1:$2')
+      .replace(/(:\d{2})\d+?$/, '$1');
+  };
+
   const onlyNumber = (value: string) => {
     return value.replace(/\D/g, '');
   };
@@ -66,6 +73,8 @@ const InputMask: React.FC<Props> = (props) => {
       setMask(maskRG(value));
     } else if (propety.masktype === 'number') {
       setMask(onlyNumber(value));
+    } else if (propety.masktype === 'hour') {
+      setMask(maskHour(value));
     }
   };
 

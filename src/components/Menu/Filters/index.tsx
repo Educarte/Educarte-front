@@ -1,13 +1,13 @@
-import { ListUsersQuery } from '@/core/domain/users';
+import { ListMenusQuery } from '@/core/domain/menu/menu.types';
 import { Button, Group, Input, Select } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { RiArrowDropDownLine, RiSearchLine } from 'react-icons/ri';
 
 interface Props {
-  onChange: (values: ListUsersQuery) => void;
+  onChange: (values: ListMenusQuery) => void;
 }
 
-const initialValues: ListUsersQuery = {
+const initialValues: ListMenusQuery = {
   page: 1,
   pageSize: 30,
   search: '',
@@ -19,18 +19,18 @@ const iconStyle = {
 };
 
 export function MenusFilters({ onChange }: Props) {
-  const form = useForm<ListUsersQuery>({
+  const form = useForm<ListMenusQuery>({
     initialValues: initialValues,
   });
 
-  function handleChange(values?: ListUsersQuery) {
+  function handleChange(values?: ListMenusQuery) {
     form.setValues({ ...values });
     onChange({ ...values });
   }
 
   function handleReset() {
     form.reset();
-    form.setValues({});
+    form.setValues({ status: null });
     onChange(initialValues);
   }
 
@@ -38,7 +38,7 @@ export function MenusFilters({ onChange }: Props) {
     <form onReset={handleReset}>
       <Group justify="flex-end" gap="sm">
         <Select
-          {...form.getInputProps('isActive')}
+          {...form.getInputProps('status')}
           clearable
           placeholder="Situação"
           rightSection={<RiArrowDropDownLine style={iconStyle} />}
@@ -48,12 +48,15 @@ export function MenusFilters({ onChange }: Props) {
               value: 'true',
             },
             {
-              label: 'inativo',
+              label: 'Inativo',
               value: 'false',
             },
           ]}
           onChange={(e) => {
-            handleChange({ ...form.values, isActive: e === 'true' });
+            handleChange({
+              ...form.values,
+              status: e === 'true' ? 0 : 1,
+            });
           }}
         />
 

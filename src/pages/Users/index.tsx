@@ -1,14 +1,16 @@
 import { RiAddLine } from 'react-icons/ri';
-import { Button, Portal, Stack } from '@mantine/core';
+import { Button, Center, Portal, Stack } from '@mantine/core';
 import { useDebouncedValue, useDisclosure } from '@mantine/hooks';
 
 import { PageContainer } from '@/components/__commons';
-import { UserFilters, UserModal, UsersList } from '@/components/Users';
 import { useState } from 'react';
-import { User, ListUsersQuery, useUsers } from '@/core/domain/users';
+import { ListUsersQuery, Users, useUsers } from '@/core/domain/users';
+import { UsersFilters } from '@/components/Users/Filters';
+import { UsersList } from '@/components/Users/List';
+import { UsersModal } from '@/components/Users/Modal';
 
 export default function UsersPage() {
-  const [selected, setSelected] = useState<User>();
+  const [selected, setSelected] = useState<Users>();
   const [opened, { open, close }] = useDisclosure(false);
   const [params, setParams] = useState<ListUsersQuery>();
   const [debounced] = useDebouncedValue(params, 200);
@@ -16,14 +18,16 @@ export default function UsersPage() {
 
   return (
     <Stack gap="md">
-      <UserFilters onChange={setParams} />
+      <UsersFilters onChange={setParams} />
       <PageContainer
         title="Usuários"
         description="Gerencie os usuários ou adicione novos"
         rightSection={
           <Button variant="filled" onClick={open}>
-            <RiAddLine />
-            Novo Usuário
+            <Center>
+              <RiAddLine style={{ marginRight: '0.5em' }} />
+              Novo Usuário
+            </Center>
           </Button>
         }
       >
@@ -31,15 +35,11 @@ export default function UsersPage() {
           data={users}
           loading={loadingUsers}
           onPaginate={(page) => setParams((params) => ({ ...params, page }))}
-          onSelectUser={(user) => {
-            setSelected(user);
-            open();
-          }}
         />
       </PageContainer>
       <Portal>
-        <UserModal
-          user={selected}
+        <UsersModal
+          users={selected}
           opened={opened}
           onClose={() => {
             setSelected(undefined);

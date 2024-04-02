@@ -1,4 +1,4 @@
-import { ListUsersQuery } from '@/core/domain/users';
+import { ListMessagesQuery } from '@/core/domain/messages/messages.types';
 import { Button, Group, Input, Select } from '@mantine/core';
 import { DatePickerInput } from '@mantine/dates';
 import { useForm } from '@mantine/form';
@@ -9,13 +9,14 @@ import {
 } from 'react-icons/ri';
 
 interface Props {
-  onChange: (values: ListUsersQuery) => void;
+  onChange: (values: ListMessagesQuery) => void;
 }
 
-const initialValues: ListUsersQuery = {
+const initialValues: ListMessagesQuery = {
   page: 1,
-  pageSize: 30,
-  search: '',
+  pageSize: 25,
+  name: '',
+  status: '',
 };
 
 const iconStyle = {
@@ -24,18 +25,22 @@ const iconStyle = {
 };
 
 export function MessagesFilters({ onChange }: Props) {
-  const form = useForm<ListUsersQuery>({
+  const form = useForm<ListMessagesQuery>({
     initialValues: initialValues,
   });
 
-  function handleChange(values?: ListUsersQuery) {
-    form.setValues({ ...values });
+  function handleChange(values?: ListMessagesQuery) {
+    form.setValues({
+      ...values,
+      startDate: values?.dateRange ? values.dateRange[0] : undefined,
+      endDate: values?.dateRange ? values.dateRange[1] : undefined,
+    });
     onChange({ ...values });
   }
 
   function handleReset() {
     form.reset();
-    form.setValues({});
+    form.setValues({ name: '' });
     onChange(initialValues);
   }
 
@@ -43,6 +48,7 @@ export function MessagesFilters({ onChange }: Props) {
     <form onReset={handleReset}>
       <Group justify="flex-end" gap="sm">
         <DatePickerInput
+          {...form.getInputProps('dateRange')}
           type="range"
           placeholder="00/00/0000 - 00/00/0000"
           rightSection={
@@ -50,10 +56,15 @@ export function MessagesFilters({ onChange }: Props) {
           }
           w={250}
           valueFormat="DD/MM/YYYY"
+          onChange={() => {
+            handleChange({
+              ...form.values,
+            });
+          }}
         />
 
         <Select
-          {...form.getInputProps('isActive')}
+          {...form.getInputProps('status')}
           clearable
           w={180}
           placeholder="Situação"
@@ -64,21 +75,24 @@ export function MessagesFilters({ onChange }: Props) {
               value: 'true',
             },
             {
-              label: 'inativo',
+              label: 'Inativo',
               value: 'false',
             },
           ]}
           onChange={(e) => {
-            handleChange({ ...form.values, isActive: e === 'true' });
+            handleChange({
+              ...form.values,
+              status: e === 'true' ? 0 : 1,
+            });
           }}
         />
 
         <Input
-          {...form.getInputProps('search')}
+          {...form.getInputProps('name')}
           placeholder="Pesquise por nome"
           rightSection={<RiSearchLine style={iconStyle} />}
           onChange={(e) =>
-            handleChange({ ...form.values, search: e.target.value })
+            handleChange({ ...form.values, name: e.target.value })
           }
           w={240}
         />

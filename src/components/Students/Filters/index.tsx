@@ -1,13 +1,13 @@
-import { ListUsersQuery } from '@/core/domain/users';
+import { ListStudentsQuery } from '@/core/domain/students/students.types';
 import { Button, Group, Input, Select } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { RiArrowDropDownLine, RiSearchLine } from 'react-icons/ri';
 
 interface Props {
-  onChange: (values: ListUsersQuery) => void;
+  onChange: (values: ListStudentsQuery) => void;
 }
 
-const initialValues: ListUsersQuery = {
+const initialValues: ListStudentsQuery = {
   page: 1,
   pageSize: 30,
   search: '',
@@ -19,11 +19,11 @@ const iconStyle = {
 };
 
 export function StudentsFilters({ onChange }: Props) {
-  const form = useForm<ListUsersQuery>({
+  const form = useForm<ListStudentsQuery>({
     initialValues: initialValues,
   });
 
-  function handleChange(values?: ListUsersQuery) {
+  function handleChange(values?: ListStudentsQuery) {
     form.setValues({ ...values });
     onChange({ ...values });
   }
@@ -38,7 +38,7 @@ export function StudentsFilters({ onChange }: Props) {
     <form onReset={handleReset}>
       <Group justify="flex-end" gap="sm">
         <Select
-          {...form.getInputProps('roleId')}
+          {...form.getInputProps('')}
           clearable
           placeholder="Turno"
           rightSection={<RiArrowDropDownLine style={iconStyle} />}
@@ -57,7 +57,7 @@ export function StudentsFilters({ onChange }: Props) {
           }}
         />
         <Select
-          {...form.getInputProps('roleId')}
+          {...form.getInputProps('classroomType')}
           clearable
           placeholder="Turma"
           rightSection={<RiArrowDropDownLine style={iconStyle} />}
@@ -77,22 +77,22 @@ export function StudentsFilters({ onChange }: Props) {
         />
 
         <Select
-          {...form.getInputProps('isActive')}
+          {...form.getInputProps('studentStatus')}
           clearable
           placeholder="Situação"
           rightSection={<RiArrowDropDownLine style={iconStyle} />}
           data={[
             {
               label: 'Ativo',
-              value: 'true',
+              value: '0',
             },
             {
-              label: 'inativo',
-              value: 'false',
+              label: 'Inativo',
+              value: '1',
             },
           ]}
           onChange={(e) => {
-            handleChange({ ...form.values, isActive: e === 'true' });
+            handleChange({ ...form.values, studentStatus: e === '0' ? 0 : 1 });
           }}
         />
 

@@ -7,10 +7,11 @@ import {
   Stack,
   Text,
 } from '@mantine/core';
-import { ChangePasswordRequest, useChangePassword } from '@/core/domain/users';
 import * as Yup from 'yup';
 import { RiLock2Line } from 'react-icons/ri';
 import PasswordStrength from '@/components/__commons/PasswordInput';
+import { ChangePasswordRequest } from '@/core/domain/users/users.types';
+import { useChangePassword } from '@/core/domain/users/users.hooks';
 
 const getCharacterValidationError = (str: string) => {
   return `A senha deve conter no mínimo um(a) ${str}`;

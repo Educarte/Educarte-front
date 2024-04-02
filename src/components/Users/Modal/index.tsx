@@ -10,17 +10,17 @@ import {
 } from '@mantine/core';
 import { useForm, yupResolver } from '@mantine/form';
 import * as Yup from 'yup';
-import {
-  UserRequest,
-  User,
-  useCreateUser,
-  useEditUser,
-} from '@/core/domain/users';
 import { useEffect } from 'react';
 import InputMask from '@/components/__commons/InputMask';
+import {
+  Users,
+  UsersRequest,
+  useCreateUsers,
+  useEditUser,
+} from '@/core/domain/users';
 
 type Props = ModalProps & {
-  user?: User;
+  users?: Users;
 };
 
 const schema = Yup.object().shape({
@@ -28,32 +28,34 @@ const schema = Yup.object().shape({
   email: Yup.string()
     .required('Campo Obrigatório')
     .email('Informe um e-mail válido'),
-  cellphone: Yup.string().required('Campo Obrigatório'),
-  roleId: Yup.string().required('Campo Obrigatório'),
+  profile: Yup.string().required('Campo Obrigatório'),
 });
 
-export function UserModal({ user, ...props }: Props) {
-  const createMutation = useCreateUser();
+export function UsersModal({ users, ...props }: Props) {
+  const createMutation = useCreateUsers();
   const editMutation = useEditUser();
 
-  const form = useForm<UserRequest>({
+  const form = useForm<UsersRequest>({
     validate: yupResolver(schema),
     initialValues: {
       name: '',
       email: '',
       cellphone: '',
-      roleId: '',
+      profile: '',
     },
   });
 
-  async function handleSaveUser(values: UserRequest) {
-    if (user) {
+  async function handleSaveUser(values: UsersRequest) {
+    if (users) {
       await editMutation.mutateAsync({
         ...values,
-        id: user.id,
+        id: users.id,
       });
     } else {
-      await createMutation.mutateAsync(values);
+      await createMutation.mutateAsync({
+        ...values,
+        profile: Number(values.profile),
+      });
     }
     handleClose();
   }
@@ -64,20 +66,20 @@ export function UserModal({ user, ...props }: Props) {
   }
 
   useEffect(() => {
-    if (user) {
+    if (users) {
       form.setValues({
-        name: user?.name || '',
-        email: user?.email || '',
-        cellphone: user?.cellphone || '',
-        roleId: user?.role.id || '',
+        name: users?.name || '',
+        email: users?.email || '',
+        cellphone: users?.cellphone || '',
+        profile: String(users.profile) || '',
       });
     }
-  }, [user]);
+  }, [users]);
 
   return (
     <Modal
       {...props}
-      title={user ? 'Editar Usuário' : 'Novo usuário'}
+      title={users ? 'Editar Usuário' : 'Novo Usuário'}
       centered
       onClose={handleClose}
     >
@@ -87,36 +89,43 @@ export function UserModal({ user, ...props }: Props) {
             {...form.getInputProps('name')}
             label="Nome"
             placeholder="Adicione o nome do usuário"
-            withAsterisk
+            required
+          />
+          <Select
+            {...form.getInputProps('profile')}
+            label="Tipo de Usuário"
+            placeholder="Selecione um tipo de usuário"
+            required
+            data={[
+              {
+                value: '0',
+                label: 'Administrador',
+              },
+              {
+                value: '1',
+                label: 'Guardião Legal',
+              },
+              {
+                value: '2',
+                label: 'Colaborador',
+              },
+              {
+                value: '3',
+                label: 'Professor',
+              },
+            ]}
           />
           <TextInput
             {...form.getInputProps('email')}
             label="E-mail"
             placeholder="Adicione o e-mail"
-            withAsterisk
+            required
           />
           <InputMask
             masktype={'phoneNumber'}
             {...form.getInputProps('cellphone')}
             label="Telefone"
             placeholder="(00) 0000-0000"
-            withAsterisk
-          />
-          <Select
-            {...form.getInputProps('roleId')}
-            label="Tipo de Usuário"
-            placeholder="Selecione um tipo de usuário"
-            withAsterisk
-            data={[
-              {
-                value: '0e6cf42b-f9d2-4bec-bb5d-7410be8bb6ee',
-                label: 'Administrador',
-              },
-              {
-                value: 'cedc36a8-b1c3-42fa-9bc6-e2e9585b7601',
-                label: 'Entregador',
-              },
-            ]}
           />
           <Divider />
           <Group gap="sm" justify="flex-end">

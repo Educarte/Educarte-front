@@ -7,7 +7,7 @@ export function useUpload() {
     onSuccess() {
       showNotification({
         variant: 'success',
-        message: 'Imagem carregada com sucesso',
+        message: 'Documento carregado com sucesso',
       });
     },
     onError(error) {

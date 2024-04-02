@@ -9,13 +9,19 @@ import { IoMdAlarm } from 'react-icons/io';
 import { MdOutlineChat } from 'react-icons/md';
 import { LuBaby } from 'react-icons/lu';
 import { LiaAppleAltSolid } from 'react-icons/lia';
+import StudentsEditPage from '@/pages/Students/Edit';
 
-const EmployeessPage = React.lazy(() => import('@/pages/Employees'));
+const UsersPage = React.lazy(() => import('@/pages/Users'));
 const StudentsPage = React.lazy(() => import('@/pages/Students'));
 const ClassesPage = React.lazy(() => import('@/pages/Classes'));
 const MessagesPage = React.lazy(() => import('@/pages/Messages'));
 const RegisterPage = React.lazy(() => import('@/pages/Register'));
 const MenuPage = React.lazy(() => import('@/pages/Menu'));
+const StudentsCreatePage = React.lazy(() => import('@/pages/Students/Create'));
+const ClassroomCreatePage = React.lazy(() => import('@/pages/Classes/Create'));
+const ClassroomEditPage = React.lazy(() => import('@/pages/Classes/Edit'));
+const RegisterEditPage = React.lazy(() => import('@/pages/Register/Edit'));
+
 // const LocationCreatePage = React.lazy(() => import('@/pages/Locations/Create'));
 // const LocationDetailsPage = React.lazy(
 //   () => import('@/pages/Locations/Details')
@@ -27,12 +33,12 @@ export const privateRoutes: CustomRoute = {
   children: [
     {
       path: 'app',
-      element: <Navigate to="employees" />,
+      element: <Navigate to="users" />,
     },
     {
-      path: 'employees',
-      element: <EmployeessPage />,
-      title: 'Colaboradores',
+      path: 'users',
+      element: <UsersPage />,
+      title: 'Usuários',
       icon: <RiAccountCircleLine />,
     },
     {
@@ -42,10 +48,26 @@ export const privateRoutes: CustomRoute = {
       icon: <LuBaby />,
     },
     {
+      path: 'students/register',
+      element: <StudentsCreatePage />,
+    },
+    {
+      path: 'student/:studentId',
+      element: <StudentsEditPage />,
+    },
+    {
       path: 'classes',
       element: <ClassesPage />,
       title: 'Turmas',
       icon: <RiGraduationCapLine />,
+    },
+    {
+      path: 'classroom/register',
+      element: <ClassroomCreatePage />,
+    },
+    {
+      path: 'classes/:classesId',
+      element: <ClassroomEditPage />,
     },
     {
       path: 'messages',
@@ -58,6 +80,10 @@ export const privateRoutes: CustomRoute = {
       element: <RegisterPage />,
       title: 'Controle de Entradas e Saída',
       icon: <IoMdAlarm />,
+    },
+    {
+      path: 'register/:registerId',
+      element: <RegisterEditPage />,
     },
     {
       path: 'menu',

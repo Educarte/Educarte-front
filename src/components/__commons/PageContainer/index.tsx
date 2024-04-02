@@ -44,7 +44,7 @@ export function PageContainer({
                 to={backTo}
               >
                 <RiArrowLeftLine
-                  color="white"
+                  color="black"
                   style={{ width: '80%', height: '80%' }}
                 />
               </ActionIcon>

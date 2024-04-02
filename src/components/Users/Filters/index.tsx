@@ -13,9 +13,12 @@ const initialValues: ListUsersQuery = {
   search: '',
 };
 
-const iconStyle = { color: 'var(--mantine-color-primary-9)', fontSize: 16 };
+const iconStyle = {
+  color: 'var(--mantine-color-primary-9)',
+  fontSize: 15,
+};
 
-export function UserFilters({ onChange }: Props) {
+export function UsersFilters({ onChange }: Props) {
   const form = useForm<ListUsersQuery>({
     initialValues: initialValues,
   });
@@ -27,7 +30,7 @@ export function UserFilters({ onChange }: Props) {
 
   function handleReset() {
     form.reset();
-    form.setValues({ roleId: null, isActive: null });
+    form.setValues({ isActive: null });
     onChange(initialValues);
   }
 
@@ -35,24 +38,33 @@ export function UserFilters({ onChange }: Props) {
     <form onReset={handleReset}>
       <Group justify="flex-end" gap="sm">
         <Select
-          {...form.getInputProps('roleId')}
+          {...form.getInputProps('profile')}
           clearable
           placeholder="Tipo"
           rightSection={<RiArrowDropDownLine style={iconStyle} />}
           data={[
             {
               label: 'Administrador',
-              value: '0e6cf42b-f9d2-4bec-bb5d-7410be8bb6ee',
+              value: '0',
             },
             {
-              label: 'Entregador',
-              value: 'cedc36a8-b1c3-42fa-9bc6-e2e9585b7601',
+              label: 'Guardião Legal',
+              value: '1',
+            },
+            {
+              label: 'Colaborador',
+              value: '2',
+            },
+            {
+              label: 'Professor',
+              value: '3',
             },
           ]}
           onChange={(e) => {
-            handleChange({ ...form.values, roleId: String(e) });
+            handleChange({ ...form.values, profile: Number(e) });
           }}
         />
+
         <Select
           {...form.getInputProps('isActive')}
           clearable
@@ -64,23 +76,29 @@ export function UserFilters({ onChange }: Props) {
               value: 'true',
             },
             {
-              label: 'inativo',
+              label: 'Inativo',
               value: 'false',
             },
           ]}
           onChange={(e) => {
-            handleChange({ ...form.values, isActive: e === 'true' });
+            handleChange({
+              ...form.values,
+              isActive: e === 'true' ? true : false,
+            });
           }}
         />
+
         <Input
           {...form.getInputProps('search')}
-          placeholder="Pesquise por nome"
+          placeholder="Pesquise por nome ou e-mail"
           rightSection={<RiSearchLine style={iconStyle} />}
           onChange={(e) =>
             handleChange({ ...form.values, search: e.target.value })
           }
+          w={240}
         />
-        <Button variant="outline" type="reset" onClick={handleReset}>
+
+        <Button size="xs" variant="outline" type="reset" onClick={handleReset}>
           Limpar filtros
         </Button>
       </Group>

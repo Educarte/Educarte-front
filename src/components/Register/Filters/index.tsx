@@ -1,16 +1,18 @@
-import { ListUsersQuery } from '@/core/domain/users';
+import { ListStudentsQuery } from '@/core/domain/students/students.types';
 import { Button, Group, Input, Select } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { RiArrowDropDownLine, RiSearchLine } from 'react-icons/ri';
 
 interface Props {
-  onChange: (values: ListUsersQuery) => void;
+  onChange: (values: ListStudentsQuery) => void;
 }
 
-const initialValues: ListUsersQuery = {
+const initialValues: ListStudentsQuery = {
   page: 1,
   pageSize: 30,
   search: '',
+  studentStatus: undefined,
+  classroomType: undefined,
 };
 
 const iconStyle = {
@@ -19,18 +21,18 @@ const iconStyle = {
 };
 
 export function RegistersFilters({ onChange }: Props) {
-  const form = useForm<ListUsersQuery>({
+  const form = useForm<ListStudentsQuery>({
     initialValues: initialValues,
   });
 
-  function handleChange(values?: ListUsersQuery) {
+  function handleChange(values?: ListStudentsQuery) {
     form.setValues({ ...values });
     onChange({ ...values });
   }
 
   function handleReset() {
     form.reset();
-    form.setValues({});
+    form.setValues({ classroomType: undefined });
     onChange(initialValues);
   }
 
@@ -38,27 +40,47 @@ export function RegistersFilters({ onChange }: Props) {
     <form onReset={handleReset}>
       <Group justify="flex-end" gap="sm">
         <Select
-          {...form.getInputProps('roleId')}
+          {...form.getInputProps('classroomType')}
           clearable
           placeholder="Sala"
           rightSection={<RiArrowDropDownLine style={iconStyle} />}
           data={[
             {
-              label: 'Administrador',
-              value: '0e6cf42b-f9d2-4bec-bb5d-7410be8bb6ee',
+              label: 'Berçário 1',
+              value: '0',
             },
             {
-              label: 'Entregador',
-              value: 'cedc36a8-b1c3-42fa-9bc6-e2e9585b7601',
+              label: 'Berçário 2',
+              value: '1',
+            },
+            {
+              label: 'Maternal 1',
+              value: '2',
+            },
+            {
+              label: 'Maternal 2',
+              value: '3',
+            },
+            {
+              label: 'Pré 1',
+              value: '4',
+            },
+            {
+              label: 'Pré 2',
+              value: '5',
+            },
+            {
+              label: 'Recreação',
+              value: '6',
             },
           ]}
           onChange={(e) => {
-            handleChange({ ...form.values, search: String(e) });
+            handleChange({ ...form.values, classroomType: Number(e) });
           }}
         />
 
         <Select
-          {...form.getInputProps('isActive')}
+          {...form.getInputProps('studentStatus')}
           clearable
           placeholder="Status"
           rightSection={<RiArrowDropDownLine style={iconStyle} />}
@@ -68,12 +90,15 @@ export function RegistersFilters({ onChange }: Props) {
               value: 'true',
             },
             {
-              label: 'inativo',
+              label: 'Inativo',
               value: 'false',
             },
           ]}
           onChange={(e) => {
-            handleChange({ ...form.values, isActive: e === 'true' });
+            handleChange({
+              ...form.values,
+              studentStatus: e === 'true' ? 0 : 1,
+            });
           }}
         />
 

@@ -1,14 +1,13 @@
 import axiosInstance from '@/core/configs/axios';
+
 import {
   ChangePasswordRequest,
   ForgotPasswordRequest,
   ListUsersQuery,
   ListUsersResponse,
   ResetPasswordRequest,
-  SimpleListUsersResponse,
-  User,
-  UserRequest,
   UserResetPasswordRequest,
+  UsersRequest,
   VerifyCodeQuery,
 } from './users.types';
 
@@ -23,25 +22,12 @@ export default {
     return result?.data;
   },
 
-  async simpleList(params?: ListUsersQuery) {
-    const result = await axiosInstance.get<SimpleListUsersResponse>(
-      `${URL_CONTROLLER}/SimpleList`,
-      { params }
-    );
-    return result?.data;
-  },
-
-  async detail(id?: string) {
-    const result = await axiosInstance.get<User>(`${URL_CONTROLLER}/${id}`);
-    return result?.data;
-  },
-
-  async create(data: UserRequest) {
+  async create(data: UsersRequest) {
     const result = await axiosInstance.post<unknown>(`${URL_CONTROLLER}`, data);
     return result?.data;
   },
 
-  async edit(data?: UserRequest) {
+  async edit(data?: UsersRequest) {
     const result = await axiosInstance.put<unknown>(
       `${URL_CONTROLLER}/${data?.id}`,
       data
@@ -56,10 +42,9 @@ export default {
     return result?.data;
   },
 
-  async changePassword(data?: ChangePasswordRequest) {
-    const result = await axiosInstance.put<unknown>(
-      `${URL_CONTROLLER}/ChangePassword`,
-      data
+  async toggle(id?: string) {
+    const result = await axiosInstance.patch<unknown>(
+      `${URL_CONTROLLER}/${id}/ToggleActive`
     );
     return result?.data;
   },
@@ -88,17 +73,18 @@ export default {
     return result?.data;
   },
 
-  async resetUserPassword(id?: string, data?: UserResetPasswordRequest) {
-    const result = await axiosInstance.patch<unknown>(
-      `${URL_CONTROLLER}/${id}/ResetPassword`,
+  async changePassword(data?: ChangePasswordRequest) {
+    const result = await axiosInstance.put<unknown>(
+      `${URL_CONTROLLER}/ChangePassword`,
       data
     );
     return result?.data;
   },
 
-  async toggle(id?: string) {
+  async resetUserPassword(id?: string, data?: UserResetPasswordRequest) {
     const result = await axiosInstance.patch<unknown>(
-      `${URL_CONTROLLER}/${id}/ToggleActive`
+      `${URL_CONTROLLER}/${id}/ResetPassword`,
+      data
     );
     return result?.data;
   },

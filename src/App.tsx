@@ -9,7 +9,7 @@ import { AuthProvider } from './core/contexts';
 import { theme } from './core/configs/mantine';
 
 import 'dayjs/locale/pt-br';
-
+import 'mantine-datatable/styles.layer.css';
 function App() {
   const queryClient = new QueryClient({
     defaultOptions: {

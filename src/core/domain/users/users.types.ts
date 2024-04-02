@@ -1,41 +1,28 @@
 import { BaseQuery, PaginatedResponse } from '@/core/types';
 
-export type UserStatus = 0 | 1;
-
-export interface User {
+export interface Users {
   id: string;
   name: string;
   email: string;
   cellphone: string;
-  role: {
-    id: string;
-    name: string;
-  };
-  status: UserStatus;
-  createdAt: string | null;
-  modifiedAt: string | null;
-  deletedAt: string | null;
+  legalGuardianType: string;
+  profile: number;
+  status: number;
 }
 
-export type ListUsersQuery = BaseQuery & {
-  roleId?: string | null;
-};
-
-export type ListUsersResponse = PaginatedResponse<User>;
-
-export interface UserRequest {
+export interface UsersRequest {
   id?: string;
   name: string;
   email: string;
   cellphone: string;
-  roleId: string;
+  profile: number | string;
 }
 
-export type SimpleListUsersResponse = PaginatedResponse<{
-  id: string;
-  name: string;
-  email: string;
-}>;
+export type ListUsersQuery = BaseQuery & {
+  profile?: number | string;
+};
+
+export type ListUsersResponse = PaginatedResponse<Users>;
 
 export interface ChangePasswordRequest {
   currentPassword: string;
