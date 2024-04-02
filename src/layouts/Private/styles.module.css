@@ -1,0 +1,9 @@
+.logo {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: var(--app-shell-navbar-width);
+	height: 100%;
+	border-right: calc(0.0625rem * var(--mantine-scale)) solid
+		var(--_app-shell-border-color);
+}
