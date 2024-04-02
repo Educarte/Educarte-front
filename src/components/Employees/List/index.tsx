@@ -1,6 +1,6 @@
 import { createColumnHelper } from '@tanstack/react-table';
 import { Table } from '@/components/__commons';
-import { ListUsersResponse, User } from '@/core/domain/users';
+import { ListUsersResponse, Users } from '@/core/domain/users';
 
 interface Props {
   data?: ListUsersResponse;
@@ -9,7 +9,7 @@ interface Props {
 }
 
 export function EmployeesList({ data, loading, onPaginate }: Props) {
-  const columnHelper = createColumnHelper<User>();
+  const columnHelper = createColumnHelper<Users>();
 
   const columns = [
     columnHelper.accessor('name', {
@@ -19,7 +19,7 @@ export function EmployeesList({ data, loading, onPaginate }: Props) {
   ];
 
   return (
-    <Table<User>
+    <Table<Users>
       columns={columns}
       data={data?.items || []}
       loading={loading}
