@@ -19,7 +19,7 @@ export interface UsersRequest {
 }
 
 export type ListUsersQuery = BaseQuery & {
-  profile?: number | string;
+  profile?: number | string | null;
 };
 
 export type ListUsersResponse = PaginatedResponse<Users>;

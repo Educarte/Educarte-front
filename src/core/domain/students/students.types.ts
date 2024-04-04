@@ -190,9 +190,9 @@ export interface LegalGuardiansRequest {
 }
 
 export type ListStudentsQuery = BaseQuery & {
-  studentStatus?: number | string;
+  studentStatus?: number | string | null;
   contractStatus?: number | string;
-  classroomType?: number | string;
+  classroomType?: number | string | null;
   legalGuardianId?: string;
 };
 

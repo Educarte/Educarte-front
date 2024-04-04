@@ -17,7 +17,7 @@ export interface BaseQuery {
   page?: number;
   pageSize?: number;
   field?: string;
-  isActive?: boolean | null;
+  isActive?: boolean | string | null;
   sortDirection?: 0 | 1;
   hasSortingData?: boolean;
 }

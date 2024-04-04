@@ -21,6 +21,8 @@ export default function ClassesEditPage() {
   const { data } = useClassroom(classesId);
   const [students, setStudents] = useState<Students[]>();
 
+  console.log('dataaaa', data);
+
   const form = useForm<ClassroomRequest>({
     initialValues: {
       name: '',

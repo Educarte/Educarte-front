@@ -11,6 +11,8 @@ const initialValues: ListStudentsQuery = {
   page: 1,
   pageSize: 30,
   search: '',
+  studentStatus: null,
+  classroomType: null,
 };
 
 const iconStyle = {
@@ -25,12 +27,12 @@ export function StudentsFilters({ onChange }: Props) {
 
   function handleChange(values?: ListStudentsQuery) {
     form.setValues({ ...values });
-    onChange({ ...values });
+    onChange({ ...values, studentStatus: values?.studentStatus ?? null });
   }
 
   function handleReset() {
     form.reset();
-    form.setValues({});
+    form.setValues(initialValues);
     onChange(initialValues);
   }
 
@@ -52,8 +54,8 @@ export function StudentsFilters({ onChange }: Props) {
               value: 'cedc36a8-b1c3-42fa-9bc6-e2e9585b7601',
             },
           ]}
-          onChange={(e) => {
-            handleChange({ ...form.values, search: String(e) });
+          onChange={() => {
+            handleChange({ ...form.values });
           }}
         />
         <Select
@@ -72,7 +74,7 @@ export function StudentsFilters({ onChange }: Props) {
             },
           ]}
           onChange={(e) => {
-            handleChange({ ...form.values, search: String(e) });
+            handleChange({ ...form.values, classroomType: e });
           }}
         />
 
@@ -92,7 +94,7 @@ export function StudentsFilters({ onChange }: Props) {
             },
           ]}
           onChange={(e) => {
-            handleChange({ ...form.values, studentStatus: e === '0' ? 0 : 1 });
+            handleChange({ ...form.values, studentStatus: e });
           }}
         />
 

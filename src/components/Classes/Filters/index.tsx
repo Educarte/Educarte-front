@@ -11,6 +11,7 @@ const initialValues: ListUsersQuery = {
   page: 1,
   pageSize: 30,
   search: '',
+  isActive: null,
 };
 
 const iconStyle = {
@@ -24,13 +25,15 @@ export function ClassesFilters({ onChange }: Props) {
   });
 
   function handleChange(values?: ListUsersQuery) {
+    console.log('values', values);
+
     form.setValues({ ...values });
-    onChange({ ...values });
+    onChange({ ...values, isActive: values?.isActive ?? null });
   }
 
   function handleReset() {
     form.reset();
-    form.setValues({});
+    form.setValues(initialValues);
     onChange(initialValues);
   }
 
@@ -52,8 +55,8 @@ export function ClassesFilters({ onChange }: Props) {
               value: 'cedc36a8-b1c3-42fa-9bc6-e2e9585b7601',
             },
           ]}
-          onChange={(e) => {
-            handleChange({ ...form.values, search: String(e) });
+          onChange={() => {
+            handleChange({ ...form.values });
           }}
         />
 
@@ -65,15 +68,15 @@ export function ClassesFilters({ onChange }: Props) {
           data={[
             {
               label: 'Ativo',
-              value: 'true',
+              value: '1',
             },
             {
-              label: 'inativo',
-              value: 'false',
+              label: 'Inativo',
+              value: '0',
             },
           ]}
           onChange={(e) => {
-            handleChange({ ...form.values, isActive: e === 'true' });
+            handleChange({ ...form.values, isActive: e });
           }}
         />
 

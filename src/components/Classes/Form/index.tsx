@@ -47,9 +47,12 @@ export function ClassroomForm({ form, data, students, setStudents }: Props) {
         classroomType: String(data.classroomType),
         maxStudents: data.maxStudents,
         time: String(data.time),
-        teacherIds: data.teachers.map((teacher) => {
-          return teacher.id;
-        }),
+        teacherIds: data.teachers
+          .filter((teacher) => teacher.profile !== 2)
+          .map((teacher) => teacher.id),
+        employeesIds: data.teachers
+          .filter((teacher) => teacher.profile === 2)
+          .map((teacher) => teacher.id),
       });
     }
   }, [data]);

@@ -11,6 +11,8 @@ const initialValues: ListUsersQuery = {
   page: 1,
   pageSize: 30,
   search: '',
+  isActive: null,
+  profile: null,
 };
 
 const iconStyle = {
@@ -25,12 +27,21 @@ export function UsersFilters({ onChange }: Props) {
 
   function handleChange(values?: ListUsersQuery) {
     form.setValues({ ...values });
-    onChange({ ...values });
+    onChange({
+      ...values,
+      profile: values?.profile ? Number(values?.profile) : null,
+      isActive:
+        values?.isActive === 'true'
+          ? true
+          : values?.isActive === 'false'
+          ? false
+          : null,
+    });
   }
 
   function handleReset() {
     form.reset();
-    form.setValues({ isActive: null });
+    form.setValues(initialValues);
     onChange(initialValues);
   }
 
@@ -39,7 +50,6 @@ export function UsersFilters({ onChange }: Props) {
       <Group justify="flex-end" gap="sm">
         <Select
           {...form.getInputProps('profile')}
-          clearable
           placeholder="Tipo"
           rightSection={<RiArrowDropDownLine style={iconStyle} />}
           data={[
@@ -61,7 +71,7 @@ export function UsersFilters({ onChange }: Props) {
             },
           ]}
           onChange={(e) => {
-            handleChange({ ...form.values, profile: Number(e) });
+            handleChange({ ...form.values, profile: e });
           }}
         />
 
@@ -83,7 +93,7 @@ export function UsersFilters({ onChange }: Props) {
           onChange={(e) => {
             handleChange({
               ...form.values,
-              isActive: e === 'true' ? true : false,
+              isActive: e,
             });
           }}
         />

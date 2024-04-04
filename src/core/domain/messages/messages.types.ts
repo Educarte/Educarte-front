@@ -27,9 +27,9 @@ export interface MessagesRequest {
 }
 
 export type ListMessagesQuery = BaseQuery & {
-  status?: number | string;
-  startDate?: Date[] | Date;
-  endDate?: Date | string;
+  status?: number | string | null;
+  startDate?: Date[] | Date | null;
+  endDate?: Date | string | null;
   dateRange?: Date[];
   studentId?: string;
   name?: string;

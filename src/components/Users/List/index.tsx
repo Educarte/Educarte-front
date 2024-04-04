@@ -27,7 +27,7 @@ import {
 } from '@/core/domain/users';
 import { UsersModal } from '../Modal';
 import { useDisclosure } from '@mantine/hooks';
-import { showConfirm } from '@/core/utils';
+import { maskPhone, showConfirm } from '@/core/utils';
 
 interface Props {
   data?: ListUsersResponse;
@@ -97,6 +97,9 @@ export function UsersList({ data, loading, onPaginate }: Props) {
     columnHelper.accessor('cellphone', {
       id: 'cellphone',
       header: 'Telefone',
+      cell: ({ getValue }) => {
+        return maskPhone(getValue());
+      },
     }),
     columnHelper.accessor('email', {
       id: 'email',

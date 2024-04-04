@@ -16,7 +16,7 @@ const initialValues: ListMessagesQuery = {
   page: 1,
   pageSize: 25,
   name: '',
-  status: '',
+  status: null,
 };
 
 const iconStyle = {
@@ -32,15 +32,16 @@ export function MessagesFilters({ onChange }: Props) {
   function handleChange(values?: ListMessagesQuery) {
     form.setValues({
       ...values,
-      startDate: values?.dateRange ? values.dateRange[0] : undefined,
-      endDate: values?.dateRange ? values.dateRange[1] : undefined,
+      startDate: values?.dateRange ? new Date(values.dateRange[0]) : null,
+      endDate: values?.dateRange ? new Date(values.dateRange[1]) : null,
     });
+
     onChange({ ...values });
   }
 
   function handleReset() {
     form.reset();
-    form.setValues({ name: '' });
+    form.setValues(initialValues);
     onChange(initialValues);
   }
 
@@ -82,7 +83,7 @@ export function MessagesFilters({ onChange }: Props) {
           onChange={(e) => {
             handleChange({
               ...form.values,
-              status: e === 'true' ? 0 : 1,
+              status: e,
             });
           }}
         />
