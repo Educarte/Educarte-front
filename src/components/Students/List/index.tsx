@@ -102,7 +102,7 @@ export function StudentsList({ data, loading, onPaginate }: Props) {
         if (getValue() === 0) {
           return 'Matutino';
         } else if (getValue() === 1) {
-          return 'Vesperino';
+          return 'Vespertino';
         } else if (getValue() === 2) {
           return 'Integral';
         }

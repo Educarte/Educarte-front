@@ -44,9 +44,7 @@ export default function ClassesEditPage() {
       status: 0,
       time: Number(values.time),
       teacherIds: values.teacherIds.concat(values.employeesIds),
-      studentIds: students?.map((student) => {
-        return student.id;
-      }),
+      studentIds: values?.studentIds,
     });
     navigate('/app/classes');
   }

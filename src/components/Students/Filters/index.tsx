@@ -11,6 +11,7 @@ const initialValues: ListStudentsQuery = {
   page: 1,
   pageSize: 30,
   search: '',
+  time: null,
   studentStatus: null,
   classroomType: null,
 };
@@ -27,7 +28,12 @@ export function StudentsFilters({ onChange }: Props) {
 
   function handleChange(values?: ListStudentsQuery) {
     form.setValues({ ...values });
-    onChange({ ...values, studentStatus: values?.studentStatus ?? null });
+    onChange({
+      ...values,
+      studentStatus: values?.studentStatus ?? null,
+      time: values?.time ?? null,
+      classroomType: values?.classroomType ?? null,
+    });
   }
 
   function handleReset() {
@@ -40,37 +46,61 @@ export function StudentsFilters({ onChange }: Props) {
     <form onReset={handleReset}>
       <Group justify="flex-end" gap="sm">
         <Select
-          {...form.getInputProps('')}
+          {...form.getInputProps('time')}
           clearable
           placeholder="Turno"
           rightSection={<RiArrowDropDownLine style={iconStyle} />}
           data={[
             {
-              label: 'Administrador',
-              value: '0e6cf42b-f9d2-4bec-bb5d-7410be8bb6ee',
+              label: 'Matutino',
+              value: '0',
             },
             {
-              label: 'Entregador',
-              value: 'cedc36a8-b1c3-42fa-9bc6-e2e9585b7601',
+              label: 'Vespertino',
+              value: '1',
+            },
+            {
+              label: 'Integral',
+              value: '2',
             },
           ]}
-          onChange={() => {
-            handleChange({ ...form.values });
+          onChange={(e) => {
+            handleChange({ ...form.values, time: e });
           }}
         />
         <Select
           {...form.getInputProps('classroomType')}
           clearable
-          placeholder="Turma"
+          placeholder="Tipo de turma"
           rightSection={<RiArrowDropDownLine style={iconStyle} />}
           data={[
             {
-              label: 'Administrador',
-              value: '0e6cf42b-f9d2-4bec-bb5d-7410be8bb6ee',
+              label: '0 meses até 11 meses',
+              value: '0',
             },
             {
-              label: 'Entregador',
-              value: 'cedc36a8-b1c3-42fa-9bc6-e2e9585b7601',
+              label: '12 meses até 1 ano e 11 meses',
+              value: '1',
+            },
+            {
+              label: 'até 24 meses completos',
+              value: '2',
+            },
+            {
+              label: 'até 36 meses completos',
+              value: '3',
+            },
+            {
+              label: 'até 4 anos completos',
+              value: '4',
+            },
+            {
+              label: 'até 5 anos completos',
+              value: '5',
+            },
+            {
+              label: 'de 4 meses até 6 anos',
+              value: '6',
             },
           ]}
           onChange={(e) => {

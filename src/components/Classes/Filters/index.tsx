@@ -1,17 +1,18 @@
-import { ListUsersQuery } from '@/core/domain/users';
+import { ListClassroomQuery } from '@/core/domain/classroom';
 import { Button, Group, Input, Select } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { RiArrowDropDownLine, RiSearchLine } from 'react-icons/ri';
 
 interface Props {
-  onChange: (values: ListUsersQuery) => void;
+  onChange: (values: ListClassroomQuery) => void;
 }
 
-const initialValues: ListUsersQuery = {
+const initialValues: ListClassroomQuery = {
   page: 1,
   pageSize: 30,
   search: '',
-  isActive: null,
+  status: null,
+  classroomType: null,
 };
 
 const iconStyle = {
@@ -20,15 +21,19 @@ const iconStyle = {
 };
 
 export function ClassesFilters({ onChange }: Props) {
-  const form = useForm<ListUsersQuery>({
+  const form = useForm<ListClassroomQuery>({
     initialValues: initialValues,
   });
 
-  function handleChange(values?: ListUsersQuery) {
+  function handleChange(values?: ListClassroomQuery) {
     console.log('values', values);
 
     form.setValues({ ...values });
-    onChange({ ...values, isActive: values?.isActive ?? null });
+    onChange({
+      ...values,
+      status: values?.status ?? null,
+      classroomType: values?.classroomType ?? null,
+    });
   }
 
   function handleReset() {
@@ -41,42 +46,62 @@ export function ClassesFilters({ onChange }: Props) {
     <form onReset={handleReset}>
       <Group justify="flex-end" gap="sm">
         <Select
-          {...form.getInputProps('roleId')}
+          {...form.getInputProps('classroomType')}
           clearable
           placeholder="Faixa etária"
           rightSection={<RiArrowDropDownLine style={iconStyle} />}
           data={[
             {
-              label: 'Administrador',
-              value: '0e6cf42b-f9d2-4bec-bb5d-7410be8bb6ee',
+              label: '0 meses até 11 meses',
+              value: '0',
             },
             {
-              label: 'Entregador',
-              value: 'cedc36a8-b1c3-42fa-9bc6-e2e9585b7601',
+              label: '12 meses até 1 ano e 11 meses',
+              value: '1',
+            },
+            {
+              label: 'até 24 meses completos',
+              value: '2',
+            },
+            {
+              label: 'até 36 meses completos',
+              value: '3',
+            },
+            {
+              label: 'até 4 anos completos',
+              value: '4',
+            },
+            {
+              label: 'até 5 anos completos',
+              value: '5',
+            },
+            {
+              label: 'de 4 meses até 6 anos',
+              value: '6',
             },
           ]}
-          onChange={() => {
-            handleChange({ ...form.values });
+          onChange={(e) => {
+            handleChange({ ...form.values, classroomType: e });
           }}
         />
 
         <Select
-          {...form.getInputProps('isActive')}
+          {...form.getInputProps('status')}
           clearable
           placeholder="Situação"
           rightSection={<RiArrowDropDownLine style={iconStyle} />}
           data={[
             {
               label: 'Ativo',
-              value: '1',
+              value: '0',
             },
             {
               label: 'Inativo',
-              value: '0',
+              value: '1',
             },
           ]}
           onChange={(e) => {
-            handleChange({ ...form.values, isActive: e });
+            handleChange({ ...form.values, status: e });
           }}
         />
 

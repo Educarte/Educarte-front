@@ -17,6 +17,8 @@ const initialValues: ListMessagesQuery = {
   pageSize: 25,
   name: '',
   status: null,
+  startDate: null,
+  endDate: null,
 };
 
 const iconStyle = {
@@ -32,11 +34,13 @@ export function MessagesFilters({ onChange }: Props) {
   function handleChange(values?: ListMessagesQuery) {
     form.setValues({
       ...values,
-      startDate: values?.dateRange ? new Date(values.dateRange[0]) : null,
-      endDate: values?.dateRange ? new Date(values.dateRange[1]) : null,
     });
 
-    onChange({ ...values });
+    onChange({
+      ...values,
+      startDate: values?.startDate ? new Date(values.startDate) : null,
+      endDate: values?.endDate ? new Date(values.endDate) : null,
+    });
   }
 
   function handleReset() {
@@ -49,17 +53,35 @@ export function MessagesFilters({ onChange }: Props) {
     <form onReset={handleReset}>
       <Group justify="flex-end" gap="sm">
         <DatePickerInput
-          {...form.getInputProps('dateRange')}
-          type="range"
-          placeholder="00/00/0000 - 00/00/0000"
+          {...form.getInputProps('startDate')}
+          clearable
+          placeholder="00/00/0000"
           rightSection={
             <RiCalendarLine size={'1.1rem'} style={{ color: '#547B9A' }} />
           }
           w={250}
           valueFormat="DD/MM/YYYY"
-          onChange={() => {
+          onChange={(e) => {
             handleChange({
               ...form.values,
+              startDate: e,
+            });
+          }}
+        />
+
+        <DatePickerInput
+          {...form.getInputProps('endDate')}
+          clearable
+          placeholder="00/00/0000"
+          rightSection={
+            <RiCalendarLine size={'1.1rem'} style={{ color: '#547B9A' }} />
+          }
+          w={250}
+          valueFormat="DD/MM/YYYY"
+          onChange={(e) => {
+            handleChange({
+              ...form.values,
+              endDate: e,
             });
           }}
         />
@@ -73,11 +95,11 @@ export function MessagesFilters({ onChange }: Props) {
           data={[
             {
               label: 'Ativo',
-              value: 'true',
+              value: '0',
             },
             {
               label: 'Inativo',
-              value: 'false',
+              value: '1',
             },
           ]}
           onChange={(e) => {

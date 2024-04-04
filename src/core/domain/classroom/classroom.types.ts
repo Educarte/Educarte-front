@@ -110,9 +110,8 @@ export interface Diaries {
 }
 
 export type ListClassroomQuery = BaseQuery & {
-  status?: number | string;
-  time?: number;
-  classroomType?: number;
+  classroomType?: string | null;
+  status?: number | string | null;
 };
 
 export type ListClassroomResponse = PaginatedResponse<Classroom>;
