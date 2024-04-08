@@ -11,8 +11,8 @@ const initialValues: ListStudentsQuery = {
   page: 1,
   pageSize: 30,
   search: '',
-  studentStatus: undefined,
-  classroomType: undefined,
+  studentStatus: null,
+  classroomType: null,
 };
 
 const iconStyle = {
@@ -27,12 +27,17 @@ export function RegistersFilters({ onChange }: Props) {
 
   function handleChange(values?: ListStudentsQuery) {
     form.setValues({ ...values });
-    onChange({ ...values });
+    onChange({
+      ...values,
+      classroomType: values?.classroomType
+        ? Number(values.classroomType)
+        : null,
+    });
   }
 
   function handleReset() {
     form.reset();
-    form.setValues({ classroomType: undefined });
+    form.setValues(initialValues);
     onChange(initialValues);
   }
 
@@ -75,7 +80,7 @@ export function RegistersFilters({ onChange }: Props) {
             },
           ]}
           onChange={(e) => {
-            handleChange({ ...form.values, classroomType: Number(e) });
+            handleChange({ ...form.values, classroomType: e });
           }}
         />
 
@@ -87,17 +92,17 @@ export function RegistersFilters({ onChange }: Props) {
           data={[
             {
               label: 'Ativo',
-              value: 'true',
+              value: '0',
             },
             {
               label: 'Inativo',
-              value: 'false',
+              value: '1',
             },
           ]}
           onChange={(e) => {
             handleChange({
               ...form.values,
-              studentStatus: e === 'true' ? 0 : 1,
+              studentStatus: e,
             });
           }}
         />

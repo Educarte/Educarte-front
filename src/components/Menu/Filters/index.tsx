@@ -11,6 +11,7 @@ const initialValues: ListMenusQuery = {
   page: 1,
   pageSize: 30,
   search: '',
+  status: null,
 };
 
 const iconStyle = {
@@ -30,7 +31,7 @@ export function MenusFilters({ onChange }: Props) {
 
   function handleReset() {
     form.reset();
-    form.setValues({ status: null });
+    form.setValues(initialValues);
     onChange(initialValues);
   }
 
@@ -45,17 +46,17 @@ export function MenusFilters({ onChange }: Props) {
           data={[
             {
               label: 'Ativo',
-              value: 'true',
+              value: '0',
             },
             {
               label: 'Inativo',
-              value: 'false',
+              value: '1',
             },
           ]}
           onChange={(e) => {
             handleChange({
               ...form.values,
-              status: e === 'true' ? 0 : 1,
+              status: e,
             });
           }}
         />

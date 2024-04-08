@@ -18,7 +18,7 @@ export interface MenusRequest {
 }
 
 export type ListMenusQuery = BaseQuery & {
-  status?: number | null;
+  status?: number | string | null;
   startDate?: Date | string;
   endDate?: Date | string;
 };

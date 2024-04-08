@@ -1,12 +1,10 @@
 import {
-  ActionIcon,
-  CheckIcon,
   Divider,
   Grid,
   Group,
-  Loader,
   Stack,
   TextInput,
+  useMantineTheme,
 } from '@mantine/core';
 import * as Yup from 'yup';
 import {
@@ -20,6 +18,8 @@ import { useEffect, useState } from 'react';
 import { AccessControls } from '@/core/domain/students/students.types';
 import { useForm } from '@mantine/form';
 import InputMask from '@/components/__commons/InputMask';
+import { showConfirm } from '@/core/utils';
+import { RiEdit2Line } from 'react-icons/ri';
 interface Props {
   registerId?: string;
   data?: RegisterDetails;
@@ -30,7 +30,11 @@ export const activeSchema = Yup.object().shape({
 });
 
 export function RegisterComponent({ data }: Props) {
+  const theme = useMantineTheme();
+
   const editMutation = useEditRegister();
+
+  const [toggleConfirmModal, setToggleConfirmModal] = useState<boolean>(false);
 
   const [accessOriginal, setAccessOriginal] =
     useState<AccessControlsByDate[]>();
@@ -43,7 +47,12 @@ export function RegisterComponent({ data }: Props) {
       time: '',
     },
   });
-  async function changeAccess(time: string, date: Date, id: string) {
+
+  async function changeAccess(time: string, date?: Date, id?: string) {
+    if (!date || !id) {
+      return;
+    }
+
     const [hora, minutos]: number[] = time.split(':').map(Number);
     date.setHours(hora);
     date.setMinutes(minutos);
@@ -51,6 +60,24 @@ export function RegisterComponent({ data }: Props) {
     await editMutation.mutateAsync({
       time: dayjs(date).format('YYYY-MM-DDTHH:mm:ss[Z]'),
       id: id,
+    });
+  }
+
+  function showConfirmEditTime(fieldName: string, callback: () => void) {
+    return showConfirm({
+      title: `Alterar horário de ${fieldName}`,
+      message: `Deseja realmente alterar o horário de ${fieldName}?`,
+      icon: (
+        <RiEdit2Line
+          style={{
+            color: theme.colors.primary[9],
+            width: '10%',
+            height: '10%',
+          }}
+        />
+      ),
+      confirmText: 'Alterar horário',
+      onConfirm: callback,
     });
   }
 
@@ -101,6 +128,7 @@ export function RegisterComponent({ data }: Props) {
                           setEntry(access.accessControls[0].id);
                           setTime(e.target.value);
                           setValueTime(e.target.value, i, 0);
+                          setToggleConfirmModal(true);
                         }}
                         label="Entrada"
                         placeholder="00h. 00min"
@@ -108,31 +136,21 @@ export function RegisterComponent({ data }: Props) {
                           editMutation.isLoading &&
                           entry === access.accessControls[0].id
                         }
-                        rightSection={
-                          <>
-                            {editMutation.isLoading &&
-                              entry === access.accessControls[0].id && (
-                                <Loader size={'xs'} />
-                              )}
-                            {entry === access.accessControls[0].id &&
-                              !editMutation.isLoading && (
-                                <ActionIcon
-                                  size={'xs'}
-                                  color="primary"
-                                  variant="transparent"
-                                  onClick={() =>
-                                    changeAccess(
-                                      String(time),
-                                      new Date(access.date || ''),
-                                      String(access.accessControls[0].id)
-                                    )
-                                  }
-                                >
-                                  <CheckIcon />
-                                </ActionIcon>
-                              )}
-                          </>
-                        }
+                        onBlur={() => {
+                          if (!toggleConfirmModal) {
+                            return;
+                          }
+
+                          showConfirmEditTime('entrada', () =>
+                            changeAccess(
+                              String(time),
+                              new Date(access.date || ''),
+                              String(access.accessControls[0].id)
+                            )
+                          );
+
+                          setToggleConfirmModal(false);
+                        }}
                       />
 
                       <InputMask
@@ -151,6 +169,7 @@ export function RegisterComponent({ data }: Props) {
                           setEntry(access.accessControls[1].id);
                           setTime(e.target.value);
                           setValueTime(e.target.value, i, 1);
+                          setToggleConfirmModal(true);
                         }}
                         label="Saída"
                         placeholder="00h. 00min"
@@ -158,31 +177,21 @@ export function RegisterComponent({ data }: Props) {
                           editMutation.isLoading &&
                           entry === access.accessControls[1].id
                         }
-                        rightSection={
-                          <>
-                            {editMutation.isLoading &&
-                              entry === access.accessControls[1].id && (
-                                <Loader size={'xs'} />
-                              )}
-                            {entry === access.accessControls[1].id &&
-                              !editMutation.isLoading && (
-                                <ActionIcon
-                                  size={'xs'}
-                                  color="primary"
-                                  variant="light"
-                                  onClick={() =>
-                                    changeAccess(
-                                      String(time),
-                                      new Date(access.date || ''),
-                                      String(access.accessControls[1].id)
-                                    )
-                                  }
-                                >
-                                  <CheckIcon />
-                                </ActionIcon>
-                              )}
-                          </>
-                        }
+                        onBlur={() => {
+                          if (!toggleConfirmModal) {
+                            return;
+                          }
+
+                          showConfirmEditTime('saída', () =>
+                            changeAccess(
+                              String(time),
+                              new Date(access.date || ''),
+                              String(access.accessControls[1].id)
+                            )
+                          );
+
+                          setToggleConfirmModal(false);
+                        }}
                       />
                       <TextInput
                         label="Carga Horária Contrada"

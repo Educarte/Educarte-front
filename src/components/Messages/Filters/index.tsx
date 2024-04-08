@@ -2,6 +2,7 @@ import { ListMessagesQuery } from '@/core/domain/messages/messages.types';
 import { Button, Group, Input, Select } from '@mantine/core';
 import { DatePickerInput } from '@mantine/dates';
 import { useForm } from '@mantine/form';
+import dayjs from 'dayjs';
 import {
   RiArrowDropDownLine,
   RiCalendarLine,
@@ -36,6 +37,14 @@ export function MessagesFilters({ onChange }: Props) {
       ...values,
     });
 
+    if (dayjs(values?.endDate).isBefore(values?.startDate, 'day')) {
+      form.setFieldError(
+        'endDate',
+        'A data de fim precisa ser depois da data de início'
+      );
+      return;
+    }
+
     onChange({
       ...values,
       startDate: values?.startDate ? new Date(values.startDate) : null,
@@ -55,7 +64,7 @@ export function MessagesFilters({ onChange }: Props) {
         <DatePickerInput
           {...form.getInputProps('startDate')}
           clearable
-          placeholder="00/00/0000"
+          placeholder="Data inicial"
           rightSection={
             <RiCalendarLine size={'1.1rem'} style={{ color: '#547B9A' }} />
           }
@@ -72,7 +81,7 @@ export function MessagesFilters({ onChange }: Props) {
         <DatePickerInput
           {...form.getInputProps('endDate')}
           clearable
-          placeholder="00/00/0000"
+          placeholder="Data final"
           rightSection={
             <RiCalendarLine size={'1.1rem'} style={{ color: '#547B9A' }} />
           }
@@ -83,6 +92,11 @@ export function MessagesFilters({ onChange }: Props) {
               ...form.values,
               endDate: e,
             });
+          }}
+          styles={{
+            error: {
+              position: 'absolute',
+            },
           }}
         />
 

@@ -2,13 +2,13 @@ import { useState } from 'react';
 import { Stack } from '@mantine/core';
 import { PageContainer } from '@/components/__commons';
 import { useDebouncedValue } from '@mantine/hooks';
-import { ListUsersQuery } from '@/core/domain/users';
 import { RegistersFilters } from '@/components/Register/Filters';
 import { RegisterList } from '@/components/Register/List';
 import { useStudents } from '@/core/domain/students/students.hooks';
+import { ListStudentsQuery } from '@/core/domain/students/students.types';
 
 export default function RegisterPage() {
-  const [params, setParams] = useState<ListUsersQuery>();
+  const [params, setParams] = useState<ListStudentsQuery>();
   const [debounced] = useDebouncedValue(params, 200);
   const { data, isLoading } = useStudents(debounced);
 
