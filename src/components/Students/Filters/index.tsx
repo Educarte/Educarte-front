@@ -76,6 +76,7 @@ export function StudentsFilters({ onChange }: Props) {
           onChange={(e) => {
             handleChange({ ...form.values, classroomId: e });
           }}
+          width={'18%'}
         />
 
         <Select

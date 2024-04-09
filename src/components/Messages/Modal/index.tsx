@@ -25,7 +25,7 @@ import {
 import { RiUpload2Line } from 'react-icons/ri';
 import { useUpload } from '@/core/domain/files';
 import StudentsSelect from '../StudentsSelect';
-import ClassroomsSelect from '../ClassroomSelect';
+import ClassroomsMultiSelect from '../ClassroomMultiSelect';
 
 type Props = ModalProps & {
   messages?: Messages;
@@ -133,7 +133,7 @@ export function MessagesModal({ messages, ...props }: Props) {
             <StudentsSelect {...form.getInputProps('studentIds')} />
           )}
           {form.values.typeFor === 'classroom' && (
-            <ClassroomsSelect {...form.getInputProps('classroomIds')} />
+            <ClassroomsMultiSelect {...form.getInputProps('classroomIds')} />
           )}
 
           <Textarea
@@ -151,7 +151,6 @@ export function MessagesModal({ messages, ...props }: Props) {
               if (e) handleUpload(e);
             }}
             rightSection={<RiUpload2Line style={{ color: '#6d8eab' }} />}
-            required
           />
           <Divider />
           <Group gap="sm" justify="flex-end">

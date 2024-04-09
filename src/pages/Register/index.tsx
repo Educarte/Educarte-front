@@ -19,7 +19,11 @@ export default function RegisterPage() {
         title="Controle de Entradas e Saída"
         description="Gerencie todas as entradas e saídas dos alunos"
       >
-        <RegisterList data={data} loading={isLoading} />
+        <RegisterList
+          data={data}
+          loading={isLoading}
+          onPaginate={(page) => setParams((params) => ({ ...params, page }))}
+        />
       </PageContainer>
     </Stack>
   );

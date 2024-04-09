@@ -1,6 +1,6 @@
 import { createColumnHelper } from '@tanstack/react-table';
 import { Table } from '@/components/__commons';
-import { ListUsersResponse, User } from '@/core/domain/users';
+import { ListUsersResponse, Users as User } from '@/core/domain/users';
 
 interface Props {
   data?: ListUsersResponse;

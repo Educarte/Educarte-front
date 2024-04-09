@@ -31,7 +31,11 @@ export default function MenuPage() {
           </Button>
         }
       >
-        <MenuList data={data} loading={isLoading} />
+        <MenuList
+          data={data}
+          loading={isLoading}
+          onPaginate={(page) => setParams((params) => ({ ...params, page }))}
+        />
       </PageContainer>
       <Portal>
         <MenuModal

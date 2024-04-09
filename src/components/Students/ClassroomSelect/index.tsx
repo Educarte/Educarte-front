@@ -30,30 +30,18 @@ const ClassroomSelect: React.FC<ClassroomSelectProps> = (props) => {
   ];
 
   return (
-    <Skeleton visible={isLoading} width="18%">
+    <Skeleton visible={isLoading} width={props.width}>
       <Select
         placeholder="Turma"
         clearable
-        // leftSection={hasNextPage ? (
-        //   <ThemeIcon title='Carregar mais itens'>
-        //     <RiLoopRightLine
-        //       onClick={() => fetchNextPage()}
-        //       style={iconStyle}
-        //     />
-        //   </ThemeIcon >
-        // ) : null}
         searchable
         value={props.defaultValue}
         data={selectData}
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        descriptionProps={({ children, ...params }: any) => {
+        descriptionProps={({ ...params }: any) => {
           return (
             <Box {...params}>
-              {status === 'error' ? (
-                <Text>Erro: {error.message}</Text>
-              ) : (
-                <>{children}</>
-              )}
+              {status === 'error' ? <Text>Erro: {error.message}</Text> : null}
             </Box>
           );
         }}
