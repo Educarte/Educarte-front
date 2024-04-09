@@ -1,0 +1,54 @@
+name: Deploy Front
+
+on: 
+  push: 
+    branches:
+    - 'main'
+
+jobs:
+  build: 
+    runs-on:  ubuntu-latest
+    steps:
+        - name: Checkout Repository
+          uses: actions/checkout@v2
+
+        - name: Build image
+          run: |
+            docker build -t educarte_front:latest .
+        - name: Save image
+          run: |
+            docker save educarte_front:latest -o educarte_front.tar
+
+        - name: Fix Permissions
+          run: |
+            chmod +r educarte_front.tar
+            
+        - name: Zip image
+          run: |
+            gzip educarte_front.tar
+            ls
+            
+        - name: Transfer Source Code
+          uses: appleboy/scp-action@v0.1.7
+          with:
+            host: ${{ secrets.SERVER_IP }}
+            username: ${{ secrets.SERVER_USER }}
+            password: ${{ secrets.SERVER_PASSWORD }}
+            key: $ {{ secrets.SERVER_SSH_KEY }}
+            passphrase: ${{ secrets.SERVERR_PASSPHRASE }}
+            source: .
+            target: ~/
+                  
+        - name: Deploy 
+          uses: appleboy/ssh-action@v1.0.3
+          with:
+            host: ${{ secrets.SERVER_IP }}
+            username: ${{ secrets.SERVER_USER }}
+            password: ${{ secrets.SERVER_PASSWORD }}
+            key: ${{ secrets.SERVER_SSH_KEY }}
+            passphrase: ${{ secrets.SERVERR_PASSPHRASE }}
+            script: |
+              docker load -i educarte_front.tar.gz
+              docker run -d -p 80:80 educarte_front:latest 
+              cd ~
+             
