@@ -193,6 +193,7 @@ export type ListStudentsQuery = BaseQuery & {
   studentStatus?: number | string | null;
   contractStatus?: number | string;
   classroomType?: number | string | null;
+  classroomId?: string | null;
   legalGuardianId?: string;
   time?: number | string | null;
 };

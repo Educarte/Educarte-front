@@ -2,6 +2,7 @@ import { ListStudentsQuery } from '@/core/domain/students/students.types';
 import { Button, Group, Input, Select } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { RiArrowDropDownLine, RiSearchLine } from 'react-icons/ri';
+import ClassroomSelect from '../ClassroomSelect';
 
 interface Props {
   onChange: (values: ListStudentsQuery) => void;
@@ -13,7 +14,7 @@ const initialValues: ListStudentsQuery = {
   search: '',
   time: null,
   studentStatus: null,
-  classroomType: null,
+  classroomId: null,
 };
 
 const iconStyle = {
@@ -32,7 +33,7 @@ export function StudentsFilters({ onChange }: Props) {
       ...values,
       studentStatus: values?.studentStatus ?? null,
       time: values?.time ?? null,
-      classroomType: values?.classroomType ?? null,
+      classroomId: values?.classroomId ?? null,
     });
   }
 
@@ -68,43 +69,12 @@ export function StudentsFilters({ onChange }: Props) {
             handleChange({ ...form.values, time: e });
           }}
         />
-        <Select
-          {...form.getInputProps('classroomType')}
+        <ClassroomSelect
+          {...form.getInputProps('classroomId')}
           clearable
-          placeholder="Tipo de turma"
           rightSection={<RiArrowDropDownLine style={iconStyle} />}
-          data={[
-            {
-              label: '0 meses até 11 meses',
-              value: '0',
-            },
-            {
-              label: '12 meses até 1 ano e 11 meses',
-              value: '1',
-            },
-            {
-              label: 'até 24 meses completos',
-              value: '2',
-            },
-            {
-              label: 'até 36 meses completos',
-              value: '3',
-            },
-            {
-              label: 'até 4 anos completos',
-              value: '4',
-            },
-            {
-              label: 'até 5 anos completos',
-              value: '5',
-            },
-            {
-              label: 'de 4 meses até 6 anos',
-              value: '6',
-            },
-          ]}
           onChange={(e) => {
-            handleChange({ ...form.values, classroomType: e });
+            handleChange({ ...form.values, classroomId: e });
           }}
         />
 
