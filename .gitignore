@@ -30,4 +30,4 @@ dist-ssr
 *.tar
 *.tar.gz
 *.tar.gzip
-.env
+
