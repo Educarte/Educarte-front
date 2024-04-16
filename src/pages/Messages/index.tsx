@@ -34,7 +34,11 @@ export default function MessagesPage() {
           </Button>
         }
       >
-        <MessagesList data={data} loading={isLoading} />
+        <MessagesList
+          data={data}
+          loading={isLoading}
+          onPaginate={(page) => setParams((params) => ({ ...params, page }))}
+        />
       </PageContainer>
       <Portal>
         <MessagesModal

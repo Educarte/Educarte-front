@@ -41,6 +41,7 @@ export default function ClassesPage() {
           }}
           data={data}
           loading={isLoading}
+          onPaginate={(page) => setParams((params) => ({ ...params, page }))}
         />
       </PageContainer>
     </Stack>

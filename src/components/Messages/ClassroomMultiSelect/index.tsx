@@ -2,19 +2,18 @@ import { useEffect, useState } from 'react';
 import { useDebouncedValue } from '@mantine/hooks';
 import {
   Box,
-  Button,
   ComboboxData,
   Loader,
   MultiSelect,
   Skeleton,
   Text,
 } from '@mantine/core';
+import { ClassroomsSelectProps } from './ClassroomsMultiSelect.types';
 import { StudentsList } from '@/core/domain/messages/messages.types';
+import { useClassroomListInfinite } from '@/core/domain/messages/messages.hooks';
 import flatInfiniteData from '@/core/utils/flatInfiniteData';
-import { TeacherSelectProps } from './TeacherSelect.types';
-import { useTeachersListInfinite } from '@/core/domain/classroom/classroom.hooks';
 
-const TeachersSelect: React.FC<TeacherSelectProps> = (props) => {
+const ClassroomsMultiSelect: React.FC<ClassroomsSelectProps> = (props) => {
   const [search] = useState('');
   const [searchDebounced] = useDebouncedValue(search, 500);
 
@@ -24,12 +23,10 @@ const TeachersSelect: React.FC<TeacherSelectProps> = (props) => {
     hasNextPage,
     fetchNextPage,
     status,
-    isFetchingNextPage,
     error,
     isLoading,
-  } = useTeachersListInfinite({
+  } = useClassroomListInfinite({
     search: searchDebounced,
-    profile: 3,
   });
 
   useEffect(() => {
@@ -49,16 +46,16 @@ const TeachersSelect: React.FC<TeacherSelectProps> = (props) => {
     ...items
       .filter(
         (map) =>
-          !props.teachers?.some((propTeachers) => propTeachers.id === map.id)
+          !props.classroom?.some((propClassroom) => propClassroom.id === map.id)
       )
       .map(selectMap),
-    ...(props.teachers?.map(selectMap) || []),
+    ...(props.classroom?.map(selectMap) || []),
   ];
 
   return (
     <Skeleton visible={isLoading} width={props.width}>
       <MultiSelect
-        placeholder="Adicione o responsável da turma"
+        placeholder="Adicione o destinatário do recado"
         clearable
         rightSection={isFetching ? <Loader size={18} /> : undefined}
         rightSectionWidth={40}
@@ -69,30 +66,7 @@ const TeachersSelect: React.FC<TeacherSelectProps> = (props) => {
         descriptionProps={({ children, ...params }: any) => {
           return (
             <Box {...params}>
-              {status === 'error' ? (
-                <Text>Erro: {error.message}</Text>
-              ) : (
-                <>
-                  {children}
-                  <Box>
-                    {hasNextPage ? (
-                      <Button
-                        onClick={() => fetchNextPage()}
-                        disabled={!hasNextPage || isFetchingNextPage}
-                        mt={10}
-                        fullWidth
-                        loading={isLoading || isFetching}
-                      >
-                        {isFetchingNextPage
-                          ? 'Carregando...'
-                          : hasNextPage
-                          ? 'Carregar mais'
-                          : null}
-                      </Button>
-                    ) : null}
-                  </Box>
-                </>
-              )}
+              {status === 'error' ? <Text>Erro: {error.message}</Text> : null}
             </Box>
           );
         }}
@@ -102,4 +76,4 @@ const TeachersSelect: React.FC<TeacherSelectProps> = (props) => {
   );
 };
 
-export default TeachersSelect;
+export default ClassroomsMultiSelect;

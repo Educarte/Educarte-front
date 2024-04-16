@@ -1,11 +1,11 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useDebouncedValue } from '@mantine/hooks';
 import {
   Box,
-  Button,
   ComboboxData,
   Loader,
   MultiSelect,
+  Skeleton,
   Text,
 } from '@mantine/core';
 import flatInfiniteData from '@/core/utils/flatInfiniteData';
@@ -23,13 +23,18 @@ const EmployeesSelect: React.FC<EmployeesSelectProps> = (props) => {
     hasNextPage,
     fetchNextPage,
     status,
-    isFetchingNextPage,
     error,
     isLoading,
   } = useEmployeesListInfinite({
     search: searchDebounced,
     profile: 2,
   });
+
+  useEffect(() => {
+    if (hasNextPage) {
+      fetchNextPage();
+    }
+  }, [hasNextPage]);
 
   const items = flatInfiniteData(data);
 
@@ -49,47 +54,26 @@ const EmployeesSelect: React.FC<EmployeesSelectProps> = (props) => {
   ];
 
   return (
-    <MultiSelect
-      placeholder="Adicione o colaborador auxiliar da turma"
-      clearable
-      rightSection={isFetching ? <Loader size={18} /> : undefined}
-      rightSectionWidth={40}
-      searchable
-      value={props.defaultValue}
-      data={selectData}
-      // eslint-disable-next-line
-      descriptionProps={({ children, ...params }: any) => {
-        return (
-          <Box {...params}>
-            {status === 'error' ? (
-              <Text>Erro: {error.message}</Text>
-            ) : (
-              <>
-                {children}
-                <Box>
-                  {hasNextPage ? (
-                    <Button
-                      onClick={() => fetchNextPage()}
-                      disabled={!hasNextPage || isFetchingNextPage}
-                      mt={10}
-                      fullWidth
-                      loading={isLoading || isFetching}
-                    >
-                      {isFetchingNextPage
-                        ? 'Carregando...'
-                        : hasNextPage
-                        ? 'Carregar mais'
-                        : null}
-                    </Button>
-                  ) : null}
-                </Box>
-              </>
-            )}
-          </Box>
-        );
-      }}
-      {...props}
-    />
+    <Skeleton visible={isLoading} width={props.width}>
+      <MultiSelect
+        placeholder="Adicione o colaborador auxiliar da turma"
+        clearable
+        rightSection={isFetching ? <Loader size={18} /> : undefined}
+        rightSectionWidth={40}
+        searchable
+        value={props.defaultValue}
+        data={selectData}
+        // eslint-disable-next-line
+        descriptionProps={({ children, ...params }: any) => {
+          return (
+            <Box {...params}>
+              {status === 'error' ? <Text>Erro: {error.message}</Text> : null}
+            </Box>
+          );
+        }}
+        {...props}
+      />
+    </Skeleton>
   );
 };
 

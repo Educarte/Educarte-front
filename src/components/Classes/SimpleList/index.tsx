@@ -56,7 +56,9 @@ export function SimpleList({ data, loading }: Props) {
       id: 'legalGuardian',
       header: '1º Representante Legal',
       cell: ({ row }) => {
-        return row.original.legalGuardians[0]?.name;
+        return row.original.legalGuardians
+          ? row.original.legalGuardians[0]?.name
+          : 'Não informado';
       },
     }),
     columnHelper.accessor('status', {

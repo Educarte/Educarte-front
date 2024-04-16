@@ -33,7 +33,11 @@ export default function StudentsPage() {
           </Button>
         }
       >
-        <StudentsList data={data} loading={isLoading} />
+        <StudentsList
+          data={data}
+          loading={isLoading}
+          onPaginate={(page) => setParams((params) => ({ ...params, page }))}
+        />
       </PageContainer>
     </Stack>
   );

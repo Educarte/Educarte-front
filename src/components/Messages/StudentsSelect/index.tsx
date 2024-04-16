@@ -1,11 +1,11 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useDebouncedValue } from '@mantine/hooks';
 import {
   Box,
-  Button,
   ComboboxData,
   Loader,
   MultiSelect,
+  Skeleton,
   Text,
 } from '@mantine/core';
 import { StudentsSelectProps } from './StudentsSelect.types';
@@ -23,12 +23,17 @@ const StudentsSelect: React.FC<StudentsSelectProps> = (props) => {
     hasNextPage,
     fetchNextPage,
     status,
-    isFetchingNextPage,
     error,
     isLoading,
   } = useStudentsListInfinite({
     search: searchDebounced,
   });
+
+  useEffect(() => {
+    if (hasNextPage) {
+      fetchNextPage();
+    }
+  }, [hasNextPage]);
 
   const items = flatInfiniteData(data);
 
@@ -48,47 +53,26 @@ const StudentsSelect: React.FC<StudentsSelectProps> = (props) => {
   ];
 
   return (
-    <MultiSelect
-      placeholder="Adicione o destinatário do recado"
-      clearable
-      rightSection={isFetching ? <Loader size={18} /> : undefined}
-      rightSectionWidth={40}
-      searchable
-      value={props.defaultValue}
-      data={selectData}
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      descriptionProps={({ children, ...params }: any) => {
-        return (
-          <Box {...params}>
-            {status === 'error' ? (
-              <Text>Erro: {error.message}</Text>
-            ) : (
-              <>
-                {children}
-                <Box>
-                  {hasNextPage ? (
-                    <Button
-                      onClick={() => fetchNextPage()}
-                      disabled={!hasNextPage || isFetchingNextPage}
-                      mt={10}
-                      fullWidth
-                      loading={isLoading || isFetching}
-                    >
-                      {isFetchingNextPage
-                        ? 'Carregando...'
-                        : hasNextPage
-                        ? 'Carregar mais'
-                        : null}
-                    </Button>
-                  ) : null}
-                </Box>
-              </>
-            )}
-          </Box>
-        );
-      }}
-      {...props}
-    />
+    <Skeleton visible={isLoading} width={props.width}>
+      <MultiSelect
+        placeholder="Adicione o destinatário do recado"
+        clearable
+        rightSection={isFetching ? <Loader size={18} /> : undefined}
+        rightSectionWidth={40}
+        searchable
+        value={props.defaultValue}
+        data={selectData}
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        descriptionProps={({ ...params }: any) => {
+          return (
+            <Box {...params}>
+              {status === 'error' ? <Text>Erro: {error.message}</Text> : null}
+            </Box>
+          );
+        }}
+        {...props}
+      />
+    </Skeleton>
   );
 };
 

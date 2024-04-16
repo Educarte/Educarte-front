@@ -177,7 +177,7 @@ export function ClassroomSmartTableList({ data, loading, onPaginate }: Props) {
         content: ({ record }) => <SimpleList data={record.students} />,
       }}
       pagination={{
-        total: data?.pagination.pageCount || 1,
+        total: data?.pagination?.pageCount ?? 1,
         onPaginate: (page) => onPaginate && onPaginate(page),
       }}
     />
