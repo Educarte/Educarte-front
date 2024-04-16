@@ -56,10 +56,10 @@ export function ClassroomSmartTableList({ data, loading, onPaginate }: Props) {
 
   function showConfirmRemoveUser(classroom: Classroom) {
     return showConfirm({
-      title: 'Remover Usuário',
-      message: 'Deseja realmente remover esse usuário?',
+      title: 'Remover Turma',
+      message: 'Deseja realmente remover essa turma?',
       icon: <RiDeleteBin7Line style={iconStyle} />,
-      confirmText: 'Remover Usuário',
+      confirmText: 'Remover Turma',
       onConfirm: async () => await removeUserMutation.mutateAsync(classroom.id),
     });
   }
