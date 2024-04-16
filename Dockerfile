@@ -8,7 +8,7 @@ ENV VITE_APP_TITLE="Educarte"
 ENV VITE_APP_DESCRIPTION="Tenha controle de todos os seus ativos"
 ENV VITE_APP_KEY="EDUCARTE"
 ENV VITE_APP_HOME="/app/users"
-ENV VITE_API_URL="http://67.207.83.50:5000/"
+ENV VITE_API_URL="http://64.225.53.11:5000/"
 RUN pnpm build
 
 # Set up the nginx server.
