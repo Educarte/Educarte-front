@@ -11,6 +11,7 @@ node_modules
 vite.config.ts
 dist
 dist-ssr
+.env
 *.local
 
 
@@ -29,4 +30,4 @@ dist-ssr
 *.tar
 *.tar.gz
 *.tar.gzip
-
+.env
