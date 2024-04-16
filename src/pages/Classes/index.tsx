@@ -28,7 +28,7 @@ export default function ClassesPage() {
           >
             <Center>
               <RiAddLine style={{ marginRight: '0.5em' }} />
-              Novo Turma
+              Nova Turma
             </Center>
           </Button>
         }

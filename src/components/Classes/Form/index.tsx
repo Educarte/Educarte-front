@@ -68,7 +68,7 @@ export function ClassroomForm({ form, data, students, setStudents }: Props) {
                 <TextInput
                   {...form.getInputProps('name')}
                   label="Nome"
-                  placeholder="Adicione o nome do (a) aluno (a)"
+                  placeholder="Adicione o nome da turma"
                   required
                 />
               </Grid.Col>
