@@ -15,6 +15,7 @@ const initialValues: ListStudentsQuery = {
   time: null,
   studentStatus: null,
   classroomId: null,
+  studentHasNoClass: null,
 };
 
 const iconStyle = {
@@ -34,6 +35,12 @@ export function StudentsFilters({ onChange }: Props) {
       studentStatus: values?.studentStatus ?? null,
       time: values?.time ?? null,
       classroomId: values?.classroomId ?? null,
+      studentHasNoClass:
+        values?.studentHasNoClass === 'true'
+          ? true
+          : values?.studentHasNoClass === 'false'
+          ? false
+          : null,
     });
   }
 
@@ -48,6 +55,7 @@ export function StudentsFilters({ onChange }: Props) {
       <Group justify="flex-end" gap="sm">
         <Select
           {...form.getInputProps('time')}
+          size={'xs'}
           clearable
           placeholder="Turno"
           rightSection={<RiArrowDropDownLine style={iconStyle} />}
@@ -71,6 +79,7 @@ export function StudentsFilters({ onChange }: Props) {
         />
         <ClassroomSelect
           {...form.getInputProps('classroomId')}
+          size={'xs'}
           clearable
           rightSection={<RiArrowDropDownLine style={iconStyle} />}
           onChange={(e) => {
@@ -80,7 +89,29 @@ export function StudentsFilters({ onChange }: Props) {
         />
 
         <Select
+          {...form.getInputProps('studentHasNoClass')}
+          size={'xs'}
+          clearable
+          placeholder="Aluno sem turma"
+          rightSection={<RiArrowDropDownLine style={iconStyle} />}
+          data={[
+            {
+              label: 'Sim',
+              value: 'true',
+            },
+            {
+              label: 'Não',
+              value: 'false',
+            },
+          ]}
+          onChange={(e) => {
+            handleChange({ ...form.values, studentHasNoClass: e });
+          }}
+        />
+
+        <Select
           {...form.getInputProps('studentStatus')}
+          size={'xs'}
           clearable
           placeholder="Situação"
           rightSection={<RiArrowDropDownLine style={iconStyle} />}
@@ -101,6 +132,7 @@ export function StudentsFilters({ onChange }: Props) {
 
         <Input
           {...form.getInputProps('search')}
+          size={'xs'}
           placeholder="Pesquise por nome"
           rightSection={<RiSearchLine style={iconStyle} />}
           onChange={(e) =>
@@ -109,7 +141,7 @@ export function StudentsFilters({ onChange }: Props) {
           w={240}
         />
 
-        <Button size="sm" variant="outline" type="reset" onClick={handleReset}>
+        <Button size="xs" variant="outline" type="reset" onClick={handleReset}>
           Limpar filtros
         </Button>
       </Group>

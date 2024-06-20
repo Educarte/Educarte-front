@@ -196,6 +196,7 @@ export type ListStudentsQuery = BaseQuery & {
   classroomId?: string | null;
   legalGuardianId?: string;
   time?: number | string | null;
+  studentHasNoClass?: boolean | string | null;
 };
 
 export type ListStudentsResponse = PaginatedResponse<Students>;
