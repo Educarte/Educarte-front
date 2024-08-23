@@ -290,7 +290,7 @@ export function StudentsEditForm({ form, data }: Props) {
                 <TextInput
                   {...form.getInputProps('legalGuardiansValue.address.street')}
                   label="Endereço Residencial"
-                  placeholder="Rua Niterói, Centro, São Caetano do Sul, São Paulo"
+                  placeholder="Nome da Rua Exemplo"
                   required
                 />
               </Grid.Col>
