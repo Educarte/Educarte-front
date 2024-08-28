@@ -53,6 +53,9 @@ export function ClassroomForm({ form, data, students, setStudents }: Props) {
         employeesIds: data.teachers
           .filter((teacher) => teacher.profile === 2)
           .map((teacher) => teacher.id),
+        studentIds: data.students.map((student) => {
+          return student.id;
+        }),
       });
     }
   }, [data]);

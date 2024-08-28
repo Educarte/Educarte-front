@@ -1,12 +1,5 @@
 import { useForm, yupResolver } from '@mantine/form';
-import {
-  Box,
-  Button,
-  ModalProps,
-  PasswordInput,
-  Stack,
-  Text,
-} from '@mantine/core';
+import { Box, ModalProps, PasswordInput, Stack, Text } from '@mantine/core';
 import * as Yup from 'yup';
 import { RiLock2Line } from 'react-icons/ri';
 import PasswordStrength from '@/components/__commons/PasswordInput';
@@ -65,14 +58,10 @@ const ChangePasswordForm: React.FC<ModalProps> = ({ onClose }) => {
               leftSection={<RiLock2Line size={16} />}
               {...form.getInputProps('currentPassword')}
             />
-            <PasswordStrength form={form} />
-            <Button
-              disabled={form.values.confirmPassword === ''}
-              type="submit"
-              loading={changePasswordMutation.isLoading}
-            >
-              Alterar Senha
-            </Button>
+            <PasswordStrength
+              isLoading={changePasswordMutation.isLoading}
+              form={form}
+            />
           </Stack>
         </Stack>
       </form>
