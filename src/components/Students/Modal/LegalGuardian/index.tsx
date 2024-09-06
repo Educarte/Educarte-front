@@ -13,6 +13,8 @@ import * as Yup from 'yup';
 import { Users, useEditUser } from '@/core/domain/users';
 import { LegalGuardiansRequest } from '@/core/domain/students/students.types';
 import { useCreateLegalGuardians } from '@/core/domain/students/students.hooks';
+import { useViaCep } from '@/core/domain/viacep';
+import { removeMask } from '@/core/utils/removeMask';
 
 type Props = ModalProps & {
   users?: Users;
@@ -28,7 +30,9 @@ const schema = Yup.object().shape({
 
 export function LegalGuardianModal({ ...props }: Props) {
   const createMutation = useCreateLegalGuardians();
+  const searchCepMutation = useViaCep();
   const editMutation = useEditUser();
+  //const searchCepMutation = useViaCep();
 
   const form = useForm<LegalGuardiansRequest>({
     validate: yupResolver(schema),
@@ -55,6 +59,20 @@ export function LegalGuardianModal({ ...props }: Props) {
       ...values,
     });
     handleClose();
+  }
+
+  async function searchCep(cep: string) {
+    const cepClear = removeMask(cep);
+    if (cepClear.length === 8) {
+      const res = await searchCepMutation.mutateAsync(cep);
+      form.setValues({
+        address: {
+          ...form.values.address,
+          cep: cep,
+          street: String(res?.logradouro),
+        },
+      });
+    }
   }
 
   function handleClose() {
@@ -136,6 +154,10 @@ export function LegalGuardianModal({ ...props }: Props) {
                 <TextInput
                   {...form.getInputProps('legalGuardian.address.cep')}
                   label="CEP"
+                  onChange={(e) => {
+                    form.getInputProps('legalGuardian.address.cep').onChange(e);
+                    searchCep(e.target.value);
+                  }}
                   placeholder="00000-000"
                   required
                 />
@@ -144,7 +166,7 @@ export function LegalGuardianModal({ ...props }: Props) {
                 <TextInput
                   {...form.getInputProps('legalGuardian.address.street')}
                   label="Endereço Residencial"
-                  placeholder="Rua Niterói, Centro, São Caetano do Sul, São Paulo"
+                  placeholder="Adicione um endereço residencial"
                   required
                 />
               </Grid.Col>
