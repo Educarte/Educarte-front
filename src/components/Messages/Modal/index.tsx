@@ -147,7 +147,7 @@ export function MessagesModal({ messages, ...props }: Props) {
             required
             rows={6}
           />
-          2
+
           <FileInput
             label="Arquivo"
             placeholder="Adicione o arquivo em PDF"
