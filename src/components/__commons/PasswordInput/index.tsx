@@ -22,9 +22,9 @@ function PasswordRequirement({
     <Text component="div" c={meets ? 'teal' : 'gray.4'} mt={5} size="sm">
       <Center inline>
         {meets ? (
-          <RiCheckFill size="0.9rem" stroke={1.5} />
+          <RiCheckFill size="0.9rem" stroke={'1.5'} />
         ) : (
-          <RiCheckFill size="0.9rem" stroke={1.5} />
+          <RiCheckFill size="0.9rem" stroke={'1.5'} />
         )}
         <Box ml={7}>{label}</Box>
       </Center>
