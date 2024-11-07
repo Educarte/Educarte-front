@@ -39,6 +39,7 @@ const schema = Yup.object().shape({
 export function MessagesModal({ messages, ...props }: Props) {
   const createMutation = useCreateMessages();
   const editMutation = useEditMessages();
+
   const [uri, setUri] = useState<string | null | File>(null);
 
   const uploadMutation = useUpload();
@@ -87,8 +88,13 @@ export function MessagesModal({ messages, ...props }: Props) {
     if (messages) {
       setUri(messages.fileUri);
       form.setValues({
-        name: messages?.name || '',
-        typeFor: messages.isDiaryForAll ? 'school' : 'student',
+        name: messages?.name,
+        typeFor:
+          messages.diaryType === 0
+            ? 'student'
+            : messages.diaryType === 1
+              ? 'classroom'
+              : 'school',
         studentIds: messages.students.map((student) => {
           return student.id;
         }),
@@ -117,7 +123,6 @@ export function MessagesModal({ messages, ...props }: Props) {
             placeholder="Adicione o nome do recado"
             required
           />
-
           <Radio.Group
             label="Para"
             {...form.getInputProps('typeFor')}
@@ -135,7 +140,6 @@ export function MessagesModal({ messages, ...props }: Props) {
           {form.values.typeFor === 'classroom' && (
             <ClassroomsMultiSelect {...form.getInputProps('classroomIds')} />
           )}
-
           <Textarea
             {...form.getInputProps('description')}
             label="Descrição"
@@ -143,6 +147,7 @@ export function MessagesModal({ messages, ...props }: Props) {
             required
             rows={6}
           />
+
           <FileInput
             label="Arquivo"
             placeholder="Adicione o arquivo em PDF"

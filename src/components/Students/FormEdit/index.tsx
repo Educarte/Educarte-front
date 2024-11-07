@@ -25,6 +25,8 @@ import InputMask from '@/components/__commons/InputMask';
 import { LegalGuardianModal } from '../Modal/LegalGuardian';
 import { useDisclosure } from '@mantine/hooks';
 import { useEffect, useState } from 'react';
+import { removeMask } from '@/core/utils/removeMask';
+import { useViaCep } from '@/core/domain/viacep';
 
 interface Props {
   form: UseFormReturnType<StudentsEditRequest>;
@@ -41,6 +43,7 @@ export const activeSchema = Yup.object().shape({
 });
 
 export function StudentsEditForm({ form, data }: Props) {
+  const searchCepMutation = useViaCep();
   const [selected, setSelected] = useState<Students>();
   const [opened, { open, close }] = useDisclosure(false);
   const iconStyle = {
@@ -158,7 +161,7 @@ export function StudentsEditForm({ form, data }: Props) {
     }
   }
 
-  const checkCEP = (e: React.ChangeEvent<HTMLInputElement>) => {
+  /* const checkCEP = (e: React.ChangeEvent<HTMLInputElement>) => {
     const cep = e.target.value.replace(/\D/g, '');
     if (cep.length == 8) {
       fetch(`https://viacep.com.br/ws/${cep}/json`)
@@ -172,7 +175,22 @@ export function StudentsEditForm({ form, data }: Props) {
     } else {
       form.setFieldValue('legalGuardiansValue.address.street', '');
     }
-  };
+  };*/
+  async function searchCep(cep: string) {
+    const cepClear = removeMask(cep);
+    if (cepClear.length === 8) {
+      const res = await searchCepMutation.mutateAsync(cep);
+      form.setValues({
+        legalGuardiansValue: {
+          ...form.values.legalGuardiansValue,
+          address: {
+            cep: cep,
+            street: String(res.logradouro),
+          },
+        },
+      });
+    }
+  }
 
   return (
     <>
@@ -281,16 +299,20 @@ export function StudentsEditForm({ form, data }: Props) {
                   masktype={'cep'}
                   {...form.getInputProps('legalGuardiansValue.address.cep')}
                   label="CEP"
-                  onBlur={checkCEP}
+                  onChange={(e) => {
+                    form.getInputProps('legalGuardiansValue').onChange(e);
+                    searchCep(e.target.value);
+                  }}
                   placeholder="00000-000"
                   required
                 />
               </Grid.Col>
+
               <Grid.Col span={5}>
                 <TextInput
                   {...form.getInputProps('legalGuardiansValue.address.street')}
                   label="Endereço Residencial"
-                  placeholder="Nome da Rua Exemplo"
+                  placeholder="Adicione um novo endereço"
                   required
                 />
               </Grid.Col>

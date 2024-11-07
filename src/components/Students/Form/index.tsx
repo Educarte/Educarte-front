@@ -23,6 +23,8 @@ import InputMask from '@/components/__commons/InputMask';
 import { LegalGuardianModal } from '../Modal/LegalGuardian';
 import { useDisclosure } from '@mantine/hooks';
 import { useState } from 'react';
+import { removeMask } from '@/core/utils/removeMask';
+import { useViaCep } from '@/core/domain/viacep';
 
 interface Props {
   form: UseFormReturnType<StudentsRequest>;
@@ -33,6 +35,8 @@ interface Props {
 
 export function StudentsForm({ form }: Props) {
   const [selected, setSelected] = useState<Students>();
+  const searchCepMutation = useViaCep();
+
   const [opened, { open, close }] = useDisclosure(false);
   const iconStyle = {
     color: 'var(--mantine-color-primary-4)',
@@ -48,7 +52,7 @@ export function StudentsForm({ form }: Props) {
     }
   }
 
-  const checkCEP = (e: React.ChangeEvent<HTMLInputElement>) => {
+  /*const checkCEP = (e: React.ChangeEvent<HTMLInputElement>) => {
     const cep = e.target.value.replace(/\D/g, '');
     if (cep.length == 8) {
       fetch(`https://viacep.com.br/ws/${cep}/json`)
@@ -62,7 +66,23 @@ export function StudentsForm({ form }: Props) {
     } else {
       form.setFieldValue('legalGuardiansValue.address.street', '');
     }
-  };
+  };*/
+  async function searchCep(cep: string) {
+    const cepClear = removeMask(cep);
+    if (cepClear.length === 8) {
+      const res = await searchCepMutation.mutateAsync(cep);
+
+      form.setValues({
+        legalGuardiansValue: {
+          ...form.values.legalGuardiansValue,
+          address: {
+            cep: cep,
+            street: res.logradouro ? String(res.logradouro) : '',
+          },
+        },
+      });
+    }
+  }
 
   return (
     <>
@@ -171,7 +191,10 @@ export function StudentsForm({ form }: Props) {
                   masktype={'cep'}
                   {...form.getInputProps('legalGuardiansValue.address.cep')}
                   label="CEP"
-                  onBlur={checkCEP}
+                  onChange={(e) => {
+                    form.getInputProps('legalGuardian.address.cep').onChange(e);
+                    searchCep(e.target.value);
+                  }}
                   placeholder="00000-000"
                   required
                 />
@@ -180,7 +203,7 @@ export function StudentsForm({ form }: Props) {
                 <TextInput
                   {...form.getInputProps('legalGuardiansValue.address.street')}
                   label="Endereço Residencial"
-                  placeholder="Rua Niterói, Centro, São Caetano do Sul, São Paulo"
+                  placeholder="Adiciona um endereço residencial"
                   required
                 />
               </Grid.Col>
