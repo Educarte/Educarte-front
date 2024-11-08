@@ -14,7 +14,7 @@ const PrivacyPolicyPage: React.FC = () => {
       <ScrollArea style={{ height: '100vh' }}>
         <div style={{ padding: '1.5rem' }}>
           <Group justify="center" mb="xl">
-            <Image src={'/images/logo.png'} />
+            <Image src={'/public/icon.png'} w={100} />
           </Group>
 
           <Container>
