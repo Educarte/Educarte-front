@@ -91,30 +91,28 @@ export function UsersModal({ users, ...props }: Props) {
             placeholder="Adicione o nome do usuário"
             required
           />
-          <Select
-            {...form.getInputProps('profile')}
-            label="Tipo de Usuário"
-            placeholder="Selecione um tipo de usuário"
-            required
-            data={[
-              {
-                value: '0',
-                label: 'Administrador',
-              },
-              {
-                value: '1',
-                label: 'Guardião Legal',
-              },
-              {
-                value: '2',
-                label: 'Colaborador',
-              },
-              {
-                value: '3',
-                label: 'Professor',
-              },
-            ]}
-          />
+          {form.values.profile != '1' && (
+            <Select
+              {...form.getInputProps('profile')}
+              label="Tipo de Usuário"
+              placeholder="Selecione um tipo de usuário"
+              required
+              data={[
+                {
+                  value: '0',
+                  label: 'Administrador',
+                },
+                {
+                  value: '2',
+                  label: 'Colaborador',
+                },
+                {
+                  value: '3',
+                  label: 'Professor',
+                },
+              ]}
+            />
+          )}
           <TextInput
             {...form.getInputProps('email')}
             label="E-mail"

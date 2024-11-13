@@ -56,7 +56,6 @@ export function RegisterComponent({ data }: Props) {
     const [hora, minutos]: number[] = time.split(':').map(Number);
     date.setHours(hora);
     date.setMinutes(minutos);
-    console.log('Teste', hora, minutos, date);
     await editMutation.mutateAsync({
       time: dayjs(date).format('YYYY-MM-DDTHH:mm:ss[Z]'),
       id: id,
@@ -87,10 +86,12 @@ export function RegisterComponent({ data }: Props) {
 
   function setValueTime(time: string, index: number, type: number) {
     if (data?.accessControlsByDate) {
-      const copyTeste = [...data?.accessControlsByDate];
+      const accessControls = [...data?.accessControlsByDate];
 
-      copyTeste[index].accessControls[type].time = time;
-      setAccessOriginal(copyTeste);
+      console.log('accessControls', accessControls);
+
+      accessControls[index].accessControls[type].time = time;
+      setAccessOriginal(accessControls);
     }
   }
 
@@ -100,120 +101,118 @@ export function RegisterComponent({ data }: Props) {
         <Grid>
           <Grid.Col span={{ base: 12, md: 12, lg: 12 }}>
             <Stack>
-              {data?.accessControlsByDate?.map((access, i) => {
-                return (
-                  <>
-                    <Group grow justify="space-between">
-                      <DateInput
-                        value={new Date(access.date || '')}
-                        label="Data"
-                        placeholder="00 / 00 / 0000"
-                        valueFormat="DD/MM/YYYY"
-                        disabled
-                      />
-                      <InputMask
-                        masktype={'hour'}
-                        {...form.getInputProps('timeEntry')}
-                        value={
-                          accessOriginal
-                            ? String(accessOriginal[i].accessControls[0].time)
-                                .length > 5
-                              ? dayjs(
-                                  accessOriginal[i].accessControls[0].time
-                                ).format('HH:mm')
-                              : String(accessOriginal[i].accessControls[0].time)
-                            : ''
+              {data?.accessControlsByDate?.map((access, i) => (
+                <>
+                  <Group grow justify="space-between">
+                    <DateInput
+                      value={new Date(access.date || '')}
+                      label="Data"
+                      placeholder="00 / 00 / 0000"
+                      valueFormat="DD/MM/YYYY"
+                      disabled
+                    />
+                    <InputMask
+                      masktype={'hour'}
+                      {...form.getInputProps('timeEntry')}
+                      value={
+                        accessOriginal
+                          ? String(accessOriginal[i]?.accessControls[0]?.time)
+                              .length > 5
+                            ? dayjs(
+                                accessOriginal[i]?.accessControls[0]?.time
+                              ).format('HH:mm')
+                            : String(accessOriginal[i]?.accessControls[0]?.time)
+                          : ''
+                      }
+                      onChange={(e) => {
+                        setEntry(access?.accessControls[0]?.id);
+                        setTime(e.target.value);
+                        setValueTime(e.target.value, i, 0);
+                        setToggleConfirmModal(true);
+                      }}
+                      label="Entrada"
+                      placeholder="00h. 00min"
+                      disabled={
+                        editMutation.isLoading &&
+                        entry === access?.accessControls[0]?.id
+                      }
+                      onBlur={() => {
+                        if (!toggleConfirmModal) {
+                          return;
                         }
-                        onChange={(e) => {
-                          setEntry(access.accessControls[0].id);
-                          setTime(e.target.value);
-                          setValueTime(e.target.value, i, 0);
-                          setToggleConfirmModal(true);
-                        }}
-                        label="Entrada"
-                        placeholder="00h. 00min"
-                        disabled={
-                          editMutation.isLoading &&
-                          entry === access.accessControls[0].id
+
+                        showConfirmEditTime('entrada', () =>
+                          changeAccess(
+                            String(time),
+                            new Date(access.date || ''),
+                            String(access?.accessControls[0]?.id)
+                          )
+                        );
+
+                        setToggleConfirmModal(false);
+                      }}
+                    />
+
+                    <InputMask
+                      masktype={'hour'}
+                      value={
+                        accessOriginal
+                          ? String(accessOriginal[i]?.accessControls[1]?.time)
+                              .length > 5
+                            ? dayjs(
+                                accessOriginal[i]?.accessControls[1]?.time
+                              ).format('HH:mm')
+                            : String(accessOriginal[i]?.accessControls[1]?.time)
+                          : ''
+                      }
+                      onChange={(e) => {
+                        setEntry(access?.accessControls[1]?.id);
+                        setTime(e.target.value);
+                        setValueTime(e.target.value, i, 1);
+                        setToggleConfirmModal(true);
+                      }}
+                      label="Saída"
+                      placeholder="00h. 00min"
+                      disabled={
+                        editMutation.isLoading &&
+                        entry === access.accessControls[1]?.id
+                      }
+                      onBlur={() => {
+                        if (!toggleConfirmModal) {
+                          return;
                         }
-                        onBlur={() => {
-                          if (!toggleConfirmModal) {
-                            return;
-                          }
 
-                          showConfirmEditTime('entrada', () =>
-                            changeAccess(
-                              String(time),
-                              new Date(access.date || ''),
-                              String(access.accessControls[0].id)
-                            )
-                          );
+                        showConfirmEditTime('saída', () =>
+                          changeAccess(
+                            String(time),
+                            new Date(access?.date || ''),
+                            String(access?.accessControls[1]?.id)
+                          )
+                        );
 
-                          setToggleConfirmModal(false);
-                        }}
-                      />
-
-                      <InputMask
-                        masktype={'hour'}
-                        value={
-                          accessOriginal
-                            ? String(accessOriginal[i].accessControls[1].time)
-                                .length > 5
-                              ? dayjs(
-                                  accessOriginal[i].accessControls[1].time
-                                ).format('HH:mm')
-                              : String(accessOriginal[i].accessControls[1].time)
-                            : ''
-                        }
-                        onChange={(e) => {
-                          setEntry(access.accessControls[1].id);
-                          setTime(e.target.value);
-                          setValueTime(e.target.value, i, 1);
-                          setToggleConfirmModal(true);
-                        }}
-                        label="Saída"
-                        placeholder="00h. 00min"
-                        disabled={
-                          editMutation.isLoading &&
-                          entry === access.accessControls[1].id
-                        }
-                        onBlur={() => {
-                          if (!toggleConfirmModal) {
-                            return;
-                          }
-
-                          showConfirmEditTime('saída', () =>
-                            changeAccess(
-                              String(time),
-                              new Date(access.date || ''),
-                              String(access.accessControls[1].id)
-                            )
-                          );
-
-                          setToggleConfirmModal(false);
-                        }}
-                      />
-                      <TextInput
-                        label="Carga Horária Contrada"
-                        placeholder="8h"
-                        value={`${access.contractedHour.hours} H`}
-                        disabled
-                      />
-                      <TextInput
-                        label="Resumo Diário"
-                        placeholder="+00h. 00min"
-                        value={
-                          access.dailySummary === null
-                            ? ''
-                            : access.dailySummary.replace(/\.\d+/, '')
-                        }
-                        disabled
-                      />
-                    </Group>
-                    <Divider />
-                  </>
-                );
-              })}
+                        setToggleConfirmModal(false);
+                      }}
+                    />
+                    <TextInput
+                      label="Carga Horária Contrada"
+                      placeholder="8h"
+                      value={`${access?.contractedHour?.hours} H`}
+                      disabled
+                    />
+                    <TextInput
+                      label="Resumo Diário"
+                      placeholder="+00h. 00min"
+                      value={
+                        access?.dailySummary === null
+                          ? ''
+                          : access.dailySummary.replace(/\.\d+/, '')
+                      }
+                      disabled
+                    />
+                  </Group>
+                  <Divider />
+                </>
+              ))}
             </Stack>
           </Grid.Col>
         </Grid>

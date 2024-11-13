@@ -128,6 +128,7 @@ export function MenuModal({ menus, ...props }: Props) {
                 placeholder="Adicione o arquivo em PDF"
                 rightSection={<RiUpload2Line style={{ color: '#6d8eab' }} />}
                 label="Arquivo"
+                accept="application/pdf"
                 onChange={(e) => {
                   if (e) handleUpload(e);
                 }}

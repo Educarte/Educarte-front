@@ -118,6 +118,14 @@ export function ClassroomForm({ form, data, students, setStudents }: Props) {
                   {...form.getInputProps('maxStudents')}
                   label="Quantidade Máxima de Alunos"
                   placeholder="Adicione a quantidade de alunos"
+                  required
+                  onChange={(value) => {
+                    form.setFieldValue(
+                      'maxStudents',
+                      value ? Number(value) : null
+                    );
+                    form.setFieldValue('studentIds', []);
+                  }}
                 />
               </Grid.Col>
               <Grid.Col span={4}>
@@ -162,6 +170,8 @@ export function ClassroomForm({ form, data, students, setStudents }: Props) {
                   label="Adicione um novo aluno"
                   placeholder="Selecione um aluno cadastrado na plataforma para ser integrado a turma"
                   {...form.getInputProps('studentIds')}
+                  disabled={!form.values.maxStudents}
+                  maxValues={form?.values?.maxStudents ?? 1}
                 />
               </Grid.Col>
               {data && (
