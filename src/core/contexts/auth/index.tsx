@@ -26,7 +26,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     if (currentUser !== null) {
       setAuthToken(data.token);
-      setUser(currentUser);
+      setUser({ ...currentUser, email: currentUser.sub });
       setAuthenticated(true);
       callback();
     }
@@ -38,18 +38,22 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setAuthenticated(false);
     callback();
   }
-
-  useEffect(() => {
+  const verifyIfUserIsAuthenticated = () => {
     const token = getAuthToken();
 
     if (token !== null) {
       const currentUser = getDecodedUser(token);
 
       if (currentUser !== null) {
-        setUser(currentUser);
+        setUser({ ...currentUser, email: currentUser.sub });
         setAuthenticated(true);
+        return currentUser;
       }
     }
+    return null;
+  };
+  useEffect(() => {
+    verifyIfUserIsAuthenticated();
   }, []);
 
   return (
@@ -57,6 +61,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       value={{
         user,
         authenticated,
+        verifyIfUserIsAuthenticated,
         onLogin: handleLogin,
         onLogout: handleLogout,
       }}

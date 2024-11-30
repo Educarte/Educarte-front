@@ -12,15 +12,19 @@ import classes from './styles.module.css';
 
 export function PrivateLayout() {
   const [opened, { toggle }] = useDisclosure();
-  const { user, authenticated } = useAuth();
+  const { verifyIfUserIsAuthenticated } = useAuth();
 
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!authenticated || user === null) {
-      navigate('/login');
+    const path = window.location.pathname;
+
+    if (verifyIfUserIsAuthenticated() === null) {
+      if (path.includes('app')) {
+        navigate('/login');
+      }
     }
-  }, [user, authenticated, navigate]);
+  }, []);
 
   return (
     <AppShell

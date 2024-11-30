@@ -7,6 +7,7 @@ const AUTH_KEY = import.meta.env.VITE_APP_KEY;
 export const initialValues: AuthContextType = {
   user: null,
   authenticated: false,
+  verifyIfUserIsAuthenticated: () => null,
   onLogin() {},
   onLogout() {},
 };
