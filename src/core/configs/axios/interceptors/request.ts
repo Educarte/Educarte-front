@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { getAuthToken } from '@/core/contexts';
 import { AxiosError, AxiosInterceptorManager, AxiosRequestConfig } from 'axios';
 
